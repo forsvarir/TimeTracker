@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
             TimeTrackerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
+                    Greeting("TimeTracker")
                 }
             }
         }
@@ -33,6 +33,6 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     TimeTrackerTheme {
-        Greeting("Android")
+        Greeting("TimeTracker")
     }
 }
