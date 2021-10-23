@@ -11,11 +11,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TimeTracker">
         <activity
-            android:name=".CurrentTaskActivity"
-            android:exported="true"
-            android:label="@string/title_activity_current_task"
-            android:theme="@style/Theme.TimeTracker.NoActionBar" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
