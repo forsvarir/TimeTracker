@@ -1,5 +1,10 @@
 package com.forsvarir.timetracker.viewModels
 
-class CurrentActivityViewModel(val availableActivities: List<String>) {
+import androidx.lifecycle.ViewModel
+import com.forsvarir.timetracker.data.TimeTrackerRepository
+
+class CurrentActivityViewModel(timeTrackerRepository: TimeTrackerRepository) : ViewModel() {
+
+    val availableActivities = timeTrackerRepository.availableActivities()
 
 }

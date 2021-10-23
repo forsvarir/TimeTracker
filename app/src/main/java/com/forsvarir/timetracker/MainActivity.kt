@@ -59,11 +59,13 @@ fun TaskView() {
 
     Column(Modifier.padding(all = 8.dp)) {
         Row(horizontalArrangement = Arrangement.Center) {
-            Text(text = stringResource(R.string.currentActivity), style = MaterialTheme.typography.h3)
+            Text(
+                text = stringResource(R.string.currentActivity),
+                style = MaterialTheme.typography.h3
+            )
         }
         Box(
-            modifier = Modifier
-                .wrapContentSize(Alignment.TopStart)
+            modifier = Modifier.wrapContentSize(Alignment.TopStart)
         ) {
             if (!update) {
                 CurrentActivityStatus(currentItem) { update = true }
