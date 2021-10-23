@@ -1,5 +1,5 @@
 package com.forsvarir.timetracker.viewModels
 
-class CurrentActivityViewModel {
+class CurrentActivityViewModel(val availableActivities: List<String>) {
 
 }
