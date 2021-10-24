@@ -13,6 +13,6 @@ class CurrentActivityTests {
 
         val viewModel = CurrentActivityViewModel(TimeTrackerRepository(possibleActivities))
 
-        assertThat(viewModel.availableActivities).containsExactly("Programming", "Walking", "Sleeping")
+        assertThat(viewModel.availableActivities.value).containsExactly("Programming", "Walking", "Sleeping")
     }
 }
