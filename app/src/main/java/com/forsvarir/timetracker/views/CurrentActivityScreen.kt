@@ -15,12 +15,11 @@ import com.forsvarir.timetracker.R
 
 @Preview
 @Composable
-fun CurrentActivityView(navTitle: (String) -> Unit = {}) {
+fun CurrentActivityView() {
     var update by remember { mutableStateOf(false) }
     var currentItem by remember { mutableStateOf("Programming") }
 
     Column(Modifier.padding(all = 8.dp)) {
-        navTitle(stringResource(R.string.current_activity))
         Box(
             modifier = Modifier.wrapContentSize(Alignment.TopStart)
         ) {

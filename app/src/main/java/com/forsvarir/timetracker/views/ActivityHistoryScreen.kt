@@ -15,9 +15,8 @@ import androidx.compose.ui.unit.dp
 
 @Preview
 @Composable
-fun ActivityHistoryView(navTitle: (String) -> Unit = {}) {
+fun ActivityHistoryView() {
     Column(Modifier.padding(all = 8.dp)) {
-        navTitle(stringResource(R.string.previous_activities))
         Row {
             Text(
                 modifier = Modifier.fillMaxWidth(0.5f),
