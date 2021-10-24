@@ -10,8 +10,17 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import com.forsvarir.timetracker.NavigationHooks
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.forsvarir.timetracker.R
+
+class NavigationHooks {
+    companion object {
+        const val CURRENT_ACTIVITY = "currentActivity"
+        const val ACTIVITY_HISTORY = "activityHistory"
+    }
+}
 
 @Composable
 fun TopNavBar(navController: NavController, title: String) {
@@ -34,4 +43,24 @@ fun TopNavBar(navController: NavController, title: String) {
             }
         }
     )
+}
+
+@Composable
+fun MainNavigation(
+    navController: NavHostController,
+    newTitle: (String) -> Unit = {}
+) {
+    NavHost(
+        navController = navController,
+        startDestination = NavigationHooks.CURRENT_ACTIVITY
+    ) {
+        composable(NavigationHooks.CURRENT_ACTIVITY) {
+            newTitle(stringResource(R.string.current_activity))
+            CurrentActivityView()
+        }
+        composable(NavigationHooks.ACTIVITY_HISTORY) {
+            newTitle(stringResource(R.string.previous_activities))
+            ActivityHistoryView()
+        }
+    }
 }
