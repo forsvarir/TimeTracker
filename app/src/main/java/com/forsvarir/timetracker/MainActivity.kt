@@ -7,6 +7,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,12 +47,19 @@ fun CurrentTaskScreen() {
 
 @Composable
 private fun TopAppBar() {
-    TopAppBar(title = {
-        Row(
-            Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.Center
-        ) { Text("Time Tracker") }
-    }, actions = {})
+    TopAppBar(
+        title = {
+            Text("Time Tracker")
+        },
+        actions = {
+            IconButton(onClick = { /* doSomething() */ }) {
+                Icon(Icons.Filled.Favorite, contentDescription = stringResource(R.string.current_activity))
+            }
+            IconButton(onClick = { /* doSomething() */ }) {
+                Icon(Icons.Filled.List, contentDescription = stringResource(R.string.previous_activities))
+            }
+        }
+    )
 }
 
 @Composable
@@ -60,7 +70,7 @@ fun TaskView() {
     Column(Modifier.padding(all = 8.dp)) {
         Row(horizontalArrangement = Arrangement.Center) {
             Text(
-                text = stringResource(R.string.currentActivity),
+                text = stringResource(R.string.current_activity),
                 style = MaterialTheme.typography.h3
             )
         }
@@ -77,7 +87,7 @@ fun TaskView() {
             }
         }
         Row(horizontalArrangement = Arrangement.Center) {
-            Text(text = "Previous Events", style = MaterialTheme.typography.h3)
+            Text(text = stringResource(R.string.previous_activities), style = MaterialTheme.typography.h3)
         }
         Row {
             Text(
