@@ -22,6 +22,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.forsvarir.timetracker.ui.theme.TimeTrackerTheme
+import com.forsvarir.timetracker.views.ActivityHistoryView
+import com.forsvarir.timetracker.views.CurrentActivityView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,122 +94,4 @@ private fun TopAppBar(navController: NavController, title: String) {
     )
 }
 
-@Composable
-fun CurrentActivityView(navTitle: (String) -> Unit) {
-    var update by remember { mutableStateOf(false) }
-    var currentItem by remember { mutableStateOf("Programming") }
 
-    Column(Modifier.padding(all = 8.dp)) {
-        navTitle(stringResource(R.string.current_activity))
-        Box(
-            modifier = Modifier.wrapContentSize(Alignment.TopStart)
-        ) {
-            if (!update) {
-                CurrentActivityStatus(currentItem) { update = true }
-            } else {
-                SelectCurrentActivity {
-                    currentItem = it
-                    update = false
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ActivityHistoryView(navTitle: (String) -> Unit) {
-    Column(Modifier.padding(all = 8.dp)) {
-        navTitle(stringResource(R.string.previous_activities))
-        Row {
-            Text(
-                modifier = Modifier.fillMaxWidth(0.5f),
-                text = "Event",
-                style = MaterialTheme.typography.subtitle1
-            )
-            Text(
-                modifier = Modifier.fillMaxWidth(0.5f),
-                text = "Duration",
-                style = MaterialTheme.typography.subtitle1
-            )
-        }
-        EventRow("Programming", "00.11")
-        EventRow("Walking", "01.11")
-        EventRow("Sleeping", "08.01")
-        EventRow("Eating", "02.11")
-    }
-}
-
-@Composable
-fun SelectCurrentActivity(onSelected: (newItem: String) -> Unit) {
-    var selectedIndex by remember { mutableStateOf(0) }
-    val items = listOf("Programming", "Walking", "Sleeping", "Eating")
-    var expanded by remember { mutableStateOf(false) }
-
-    Box(
-        modifier = Modifier
-            .wrapContentSize(Alignment.TopStart)
-    ) {
-        Text(
-            items[selectedIndex],
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = { expanded = true })
-                .background(
-                    Color.Gray
-                )
-        )
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Red)
-        ) {
-            items.forEachIndexed { index, itemText ->
-                DropdownMenuItem(onClick = {
-                    expanded = false
-                    selectedIndex = index
-                    onSelected(itemText)
-                }) {
-                    Text(itemText)
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun CurrentActivityStatus(currentActivity: String, onUpdate: () -> Unit) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            text = currentActivity,
-            style = MaterialTheme.typography.subtitle2
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = "TickTickTick",
-            style = MaterialTheme.typography.subtitle2
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        OutlinedButton(onClick = { onUpdate() }) {
-            Text("ChangeTask")
-        }
-    }
-}
-
-@Composable
-private fun EventRow(activity: String, duration: String) {
-    Row {
-        Text(
-            modifier = Modifier.fillMaxWidth(0.5f),
-            text = activity,
-            style = MaterialTheme.typography.subtitle2
-        )
-        Text(
-            modifier = Modifier.fillMaxWidth(0.5f),
-            text = duration,
-            style = MaterialTheme.typography.subtitle2
-        )
-    }
-}
