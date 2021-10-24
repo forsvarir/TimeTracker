@@ -17,6 +17,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.forsvarir.timetracker.ui.theme.TimeTrackerTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,52 +32,73 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+class NavigationHooks {
+    companion object {
+        const val CURRENT_ACTIVITY = "currentActivity"
+        const val ACTIVITY_HISTORY = "activityHistory"
+    }
+}
+
 @Preview
 @Composable
 fun CurrentTaskScreen() {
+    val navController = rememberNavController()
+    var title by remember { mutableStateOf("") }
+
     TimeTrackerTheme {
         Scaffold(topBar = {
-            TopAppBar()
+            TopAppBar(navController, title)
         }) { innerPadding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                TaskView()
+                NavHost(
+                    navController = navController,
+                    startDestination = NavigationHooks.CURRENT_ACTIVITY
+                ) {
+                    composable(NavigationHooks.CURRENT_ACTIVITY) {
+                        CurrentActivityView { t -> title = t }
+                    }
+                    composable(NavigationHooks.ACTIVITY_HISTORY) {
+                        ActivityHistoryView { t -> title = t }
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun TopAppBar() {
+private fun TopAppBar(navController: NavController, title: String) {
     TopAppBar(
         title = {
-            Text("Time Tracker")
+            Text(title)
         },
         actions = {
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(Icons.Filled.Favorite, contentDescription = stringResource(R.string.current_activity))
+            IconButton(onClick = { navController.navigate(NavigationHooks.CURRENT_ACTIVITY) }) {
+                Icon(
+                    Icons.Filled.Favorite,
+                    contentDescription = stringResource(R.string.current_activity)
+                )
             }
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(Icons.Filled.List, contentDescription = stringResource(R.string.previous_activities))
+            IconButton(onClick = { navController.navigate(NavigationHooks.ACTIVITY_HISTORY) }) {
+                Icon(
+                    Icons.Filled.List,
+                    contentDescription = stringResource(R.string.previous_activities)
+                )
             }
         }
     )
 }
 
 @Composable
-fun TaskView() {
+fun CurrentActivityView(navTitle: (String) -> Unit) {
     var update by remember { mutableStateOf(false) }
     var currentItem by remember { mutableStateOf("Programming") }
 
     Column(Modifier.padding(all = 8.dp)) {
-        Row(horizontalArrangement = Arrangement.Center) {
-            Text(
-                text = stringResource(R.string.current_activity),
-                style = MaterialTheme.typography.h3
-            )
-        }
+        navTitle(stringResource(R.string.current_activity))
         Box(
             modifier = Modifier.wrapContentSize(Alignment.TopStart)
         ) {
@@ -86,9 +111,13 @@ fun TaskView() {
                 }
             }
         }
-        Row(horizontalArrangement = Arrangement.Center) {
-            Text(text = stringResource(R.string.previous_activities), style = MaterialTheme.typography.h3)
-        }
+    }
+}
+
+@Composable
+fun ActivityHistoryView(navTitle: (String) -> Unit) {
+    Column(Modifier.padding(all = 8.dp)) {
+        navTitle(stringResource(R.string.previous_activities))
         Row {
             Text(
                 modifier = Modifier.fillMaxWidth(0.5f),

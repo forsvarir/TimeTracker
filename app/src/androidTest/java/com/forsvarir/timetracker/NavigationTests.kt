@@ -50,7 +50,6 @@ class NavigationTests {
     }
 }
 
-
 typealias MainActivityComposeTestRule = AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>
 
 class CurrentActivityScreenController(private val rule: MainActivityComposeTestRule) {
