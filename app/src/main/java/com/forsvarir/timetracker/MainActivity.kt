@@ -11,22 +11,26 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.forsvarir.timetracker.data.TimeTrackerRepository
 import com.forsvarir.timetracker.ui.theme.TimeTrackerTheme
+import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 import com.forsvarir.timetracker.views.MainNavigation
 import com.forsvarir.timetracker.views.TopNavBar
 
 class MainActivity : ComponentActivity() {
+    private val timeTrackerRepository = TimeTrackerRepository()
+    private val viewModel = CurrentActivityViewModel(timeTrackerRepository)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainActivityView()
+            MainActivityView(viewModel)
         }
     }
 }
 
 @Preview
 @Composable
-fun MainActivityView() {
+fun MainActivityView(viewModel: CurrentActivityViewModel = stubbedViewModel()) {
     val navController = rememberNavController()
     var title by remember { mutableStateOf("") }
 
@@ -38,10 +42,15 @@ fun MainActivityView() {
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                MainNavigation(navController) {
+                MainNavigation(navController, viewModel) {
                     title = it
                 }
             }
         }
     }
+}
+
+fun stubbedViewModel(): CurrentActivityViewModel {
+    val timeTrackerRepository = TimeTrackerRepository()
+    return CurrentActivityViewModel(timeTrackerRepository)
 }

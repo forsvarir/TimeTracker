@@ -12,10 +12,12 @@ import androidx.compose.ui.res.stringResource
 import com.forsvarir.timetracker.R
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.forsvarir.timetracker.data.ActivityInstance
+import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 
 @Preview
 @Composable
-fun ActivityHistoryView() {
+fun ActivityHistoryView(events : List<ActivityInstance> = stubbedEvents()) {
     Column(Modifier.padding(all = 8.dp)) {
         Row {
             Text(
@@ -29,11 +31,19 @@ fun ActivityHistoryView() {
                 style = MaterialTheme.typography.subtitle1
             )
         }
-        EventRow("Programming", "00.11")
-        EventRow("Walking", "01.11")
-        EventRow("Sleeping", "08.01")
-        EventRow("Eating", "02.11")
+        events.forEach {
+            EventRow(it.name, it.duration)
+        }
     }
+}
+
+fun stubbedEvents(): List<ActivityInstance> {
+    return listOf(
+        ActivityInstance("Programming", "11:00"),
+        ActivityInstance("Walking", "10:10"),
+        ActivityInstance("Programming", "10:01"),
+        ActivityInstance("Eating", "11:11")
+    )
 }
 
 @Composable

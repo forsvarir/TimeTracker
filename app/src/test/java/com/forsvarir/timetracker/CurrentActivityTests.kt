@@ -9,7 +9,7 @@ class CurrentActivityTests {
 
     @Test
     fun activitiesAvailable() {
-        val possibleActivities = listOf("Programming", "Walking", "Sleeping")
+            val possibleActivities = listOf("Programming", "Walking", "Sleeping")
 
         val viewModel = CurrentActivityViewModel(TimeTrackerRepository(possibleActivities))
 
