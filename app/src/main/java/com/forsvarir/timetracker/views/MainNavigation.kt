@@ -8,6 +8,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -58,11 +60,17 @@ fun MainNavigation(
     ) {
         composable(NavigationHooks.CURRENT_ACTIVITY) {
             newTitle(stringResource(R.string.current_activity))
-            CurrentActivityView()
+            val currentActivity by viewModel.currentActivity.observeAsState()
+            CurrentActivityView(
+                currentActivity?.name ?: "",
+                viewModel.availableActivities.value ?: emptyList()
+            ) {
+                viewModel.startActivity(it)
+            }
         }
         composable(NavigationHooks.ACTIVITY_HISTORY) {
             newTitle(stringResource(R.string.previous_activities))
-            ActivityHistoryView(viewModel.activityHistory.value ?: emptyList())
+            ActivityHistoryView(viewModel.previousActivities.value ?: emptyList())
         }
     }
 }

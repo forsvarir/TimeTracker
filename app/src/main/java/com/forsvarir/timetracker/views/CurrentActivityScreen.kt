@@ -17,19 +17,22 @@ import androidx.compose.ui.unit.dp
 
 @Preview
 @Composable
-fun CurrentActivityView() {
+fun CurrentActivityView(
+    currentActivity: String = "Doing Stuff",
+    availableActivities: List<String> = listOf("Doing Stuff", "Other Stuff"),
+    onCurrentActivityChanged: (String) -> Unit = {}
+) {
     var update by remember { mutableStateOf(false) }
-    var currentItem by remember { mutableStateOf("Programming") }
 
     Column(Modifier.padding(all = 8.dp)) {
         Box(
             modifier = Modifier.wrapContentSize(Alignment.TopStart)
         ) {
             if (!update) {
-                CurrentActivityStatus(currentItem) { update = true }
+                CurrentActivityStatus(currentActivity) { update = true }
             } else {
-                SelectCurrentActivity(currentItem) {
-                    currentItem = it
+                SelectCurrentActivity(currentActivity, availableActivities) {
+                    onCurrentActivityChanged(it)
                     update = false
                 }
             }
@@ -56,9 +59,11 @@ private fun CurrentActivityStatus(currentActivity: String, onUpdate: () -> Unit)
 }
 
 @Composable
-fun SelectCurrentActivity(currentItem: String, onSelected: (newItem: String) -> Unit) {
-    val items = listOf("Programming", "Walking", "Sleeping", "Eating")
-
+fun SelectCurrentActivity(
+    currentItem: String,
+    availableActivities: List<String>,
+    onSelected: (newItem: String) -> Unit
+) {
     Box(
         modifier = Modifier
             .wrapContentSize(Alignment.TopStart)
@@ -70,7 +75,7 @@ fun SelectCurrentActivity(currentItem: String, onSelected: (newItem: String) -> 
                 .fillMaxWidth()
                 .background(Color.Red)
         ) {
-            items.forEach { itemText ->
+            availableActivities.forEach { itemText ->
                 DropdownMenuItem(onClick = {
                     onSelected(itemText)
                 }) {
