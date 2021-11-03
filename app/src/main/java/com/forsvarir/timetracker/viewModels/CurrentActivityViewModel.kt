@@ -6,27 +6,51 @@ import androidx.lifecycle.ViewModel
 import com.forsvarir.timetracker.data.ActivityConstants
 import com.forsvarir.timetracker.data.ActivityInstance
 import com.forsvarir.timetracker.data.TimeTrackerRepository
+import java.time.LocalDateTime
 import java.util.*
 
-class CurrentActivityViewModel(timeTrackerRepository: TimeTrackerRepository) : ViewModel() {
-    val activityHistory: LiveData<List<ActivityInstance>> = timeTrackerRepository.getPreviousActivities()
-    val availableActivities : LiveData<List<String>> = timeTrackerRepository.availableActivities()
+class CurrentActivityViewModel(
+    timeTrackerRepository: TimeTrackerRepository,
+    private val clock: TimeFactory = LocalTimeFactory()
+) : ViewModel() {
+    val activityHistory: LiveData<List<ActivityInstance>> =
+        timeTrackerRepository.getPreviousActivities()
+    val availableActivities: LiveData<List<String>> = timeTrackerRepository.availableActivities()
 
-    private val mutablePreviousActivities = MutableLiveData<MutableList<ActivityInstance>>(LinkedList())
+    private val mutablePreviousActivities =
+        MutableLiveData<MutableList<ActivityInstance>>(LinkedList())
     val previousActivities: LiveData<MutableList<ActivityInstance>> = mutablePreviousActivities
 
-    private val mutableCurrentActivity = MutableLiveData<ActivityInstance>(ActivityConstants.Unknown)
-    val currentActivity : LiveData<ActivityInstance> = mutableCurrentActivity
+    private val mutableCurrentActivity =
+        MutableLiveData(ActivityConstants.Unknown)
+    val currentActivity: LiveData<ActivityInstance> = mutableCurrentActivity
 
     fun startActivity(newActivity: String) {
-        if(newActivity == currentActivity.value?.name) {
+        val activityChangeTime = clock.now()
+        if (newActivity == currentActivity.value?.name) {
             return
         }
-        if(currentActivity.value?.name != ActivityConstants.Unknown.name) {
+
+        if (currentActivity.value?.name != ActivityConstants.Unknown.name) {
+            currentActivity.value?.endTime = activityChangeTime
             previousActivities.value?.add(currentActivity.value!!)
         }
+
         mutableCurrentActivity.value =
-            ActivityInstance(availableActivities.value?.find { it == newActivity }!!,
-                "")
+            ActivityInstance(
+                availableActivities.value?.find { it == newActivity }!!,
+                "",
+                activityChangeTime
+            )
+    }
+}
+
+interface TimeFactory {
+    fun now(): LocalDateTime
+}
+
+class LocalTimeFactory : TimeFactory {
+    override fun now(): LocalDateTime {
+        return LocalDateTime.now()
     }
 }
