@@ -2,6 +2,7 @@ package com.forsvarir.timetracker.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.time.LocalDateTime
 
 class TimeTrackerRepository(possibleActivities: List<String> = listOf("Programming", "Walking", "Sleeping")) {
     private var availableActivities = MutableLiveData(possibleActivities)
@@ -21,4 +22,15 @@ class TimeTrackerRepository(possibleActivities: List<String> = listOf("Programmi
     }
 }
 
-data class ActivityInstance (var name : String, var duration : String)
+data class ActivityInstance (
+    var name : String,
+    var duration : String, // TODO: remove and derive this from start/end time
+    var startTime : LocalDateTime = LocalDateTime.now(),
+    var endTime : LocalDateTime? = null
+ )
+
+class ActivityConstants {
+    companion object {
+        val Unknown = ActivityInstance("Unknown", "")
+    }
+}
