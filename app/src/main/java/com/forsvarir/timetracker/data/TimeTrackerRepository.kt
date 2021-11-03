@@ -1,6 +1,5 @@
 package com.forsvarir.timetracker.data
 
-import android.icu.util.TimeUnit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.forsvarir.timetracker.viewModels.LocalTimeFactory
