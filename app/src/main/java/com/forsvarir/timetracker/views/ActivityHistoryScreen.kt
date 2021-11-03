@@ -39,10 +39,10 @@ fun ActivityHistoryView(events : List<ActivityInstance> = stubbedEvents()) {
 
 fun stubbedEvents(): List<ActivityInstance> {
     return listOf(
-        ActivityInstance("Programming", "11:00"),
-        ActivityInstance("Walking", "10:10"),
-        ActivityInstance("Programming", "10:01"),
-        ActivityInstance("Eating", "11:11")
+        ActivityInstance("Programming"),
+        ActivityInstance("Walking"),
+        ActivityInstance("Programming"),
+        ActivityInstance("Eating")
     )
 }
 

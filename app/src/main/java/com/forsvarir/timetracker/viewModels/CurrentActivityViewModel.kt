@@ -36,12 +36,11 @@ class CurrentActivityViewModel(
             previousActivities.value?.add(currentActivity.value!!)
         }
 
-        mutableCurrentActivity.value =
-            ActivityInstance(
-                availableActivities.value?.find { it == newActivity }!!,
-                "",
-                activityChangeTime
-            )
+        mutableCurrentActivity.value = ActivityInstance(
+            availableActivities.value?.find { it == newActivity }!!,
+            clock,
+            activityChangeTime
+        )
     }
 }
 

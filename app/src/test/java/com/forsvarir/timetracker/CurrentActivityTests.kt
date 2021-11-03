@@ -11,7 +11,6 @@ import java.time.LocalDateTime
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CurrentActivityTests {
-
     @Test
     fun activitiesAvailable() {
         val possibleActivities = listOf("Programming", "Walking", "Sleeping")
