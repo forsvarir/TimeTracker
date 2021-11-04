@@ -9,15 +9,9 @@ import java.time.LocalDateTime
 
 class TimeTrackerRepository(possibleActivities: List<String> = listOf("Programming", "Walking", "Sleeping")) {
     private var availableActivities = MutableLiveData(possibleActivities)
-    val previousActivities = MutableLiveData(listOf<ActivityInstance>())
 
     fun availableActivities(): LiveData<List<String>> {
         return availableActivities
-    }
-
-
-    fun getPreviousActivities() : LiveData<List<ActivityInstance>> {
-        return previousActivities
     }
 }
 

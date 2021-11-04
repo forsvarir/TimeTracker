@@ -13,8 +13,6 @@ class CurrentActivityViewModel(
     timeTrackerRepository: TimeTrackerRepository,
     private val clock: TimeFactory = LocalTimeFactory()
 ) : ViewModel() {
-    val activityHistory: LiveData<List<ActivityInstance>> =
-        timeTrackerRepository.getPreviousActivities()
     val availableActivities: LiveData<List<String>> = timeTrackerRepository.availableActivities()
 
     private val mutablePreviousActivities =
