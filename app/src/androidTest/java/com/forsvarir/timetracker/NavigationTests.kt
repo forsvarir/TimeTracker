@@ -32,7 +32,7 @@ class NavigationTests {
     @Test
     fun canNavigateToCurrentActivityScreen() {
         launchCurrentActivityScreen(mainActivityRule) {
-            navigateCurrentActivityScreen()
+            navigateToCurrentActivityScreen()
         } verify {
             currentActivityScreenIsOpen()
         }

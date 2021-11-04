@@ -1,7 +1,9 @@
 package com.forsvarir.timetracker.verification
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.forsvarir.timetracker.MainActivity
@@ -18,5 +20,10 @@ class CurrentActivityScreenVerifier(private val rule: AndroidComposeTestRule<Act
         val previousActivities = rule.activity.getString(R.string.previous_activities_screen_title)
         rule.onNodeWithText(previousActivities)
             .assertIsDisplayed()
+    }
+
+    fun currentActivityIs(activityName: String) {
+        rule.onNodeWithContentDescription("Current Activity")
+            .assertTextContains(activityName)
     }
 }
