@@ -1,40 +1,37 @@
 package com.forsvarir.timetracker
 
+import android.content.pm.ActivityInfo
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.forsvarir.timetracker.control.CurrentActivityScreenController
 import org.junit.Rule
 import org.junit.Test
 
-
-class NavigationTests {
+class CurrentActivityTransitionTests {
     @get:Rule
     val mainActivityRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun launchOpensCurrentActivityScreen() {
+    fun selectingNewActivityChanges() {
         launchCurrentActivityScreen(mainActivityRule) {
-        } verify {
-            currentActivityScreenIsOpen()
-        }
-    }
+            mainActivityRule.activity.requestedOrientation =
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
-    @Test
-    fun canNavigateToActivityHistoryScreen() {
-        launchCurrentActivityScreen(mainActivityRule) {
-            navigateToActivityHistoryScreen()
-        } verify {
-            activityHistoryScreenIsOpen()
-        }
-    }
+            mainActivityRule
+                .onNodeWithContentDescription("Current Activity")
+                .performClick()
+            mainActivityRule
+                .onNodeWithText("Programming")
+                .performClick()
 
-    @Test
-    fun canNavigateToCurrentActivityScreen() {
-        launchCurrentActivityScreen(mainActivityRule) {
-            navigateCurrentActivityScreen()
         } verify {
-            currentActivityScreenIsOpen()
+            mainActivityRule.onNodeWithContentDescription("Current Activity")
+                .assertTextContains("Programming")
         }
     }
 
@@ -45,4 +42,3 @@ class NavigationTests {
         return CurrentActivityScreenController(rule).apply(block)
     }
 }
-
