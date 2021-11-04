@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -43,12 +45,13 @@ fun CurrentActivityView(
 @Composable
 private fun CurrentActivityStatus(currentActivity: String, onUpdate: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            text = currentActivity,
+        Text(text = currentActivity,
             style = MaterialTheme.typography.subtitle2,
-            modifier = Modifier.clickable(enabled = true, role = Role.Button) {
-                onUpdate()
-            }
+            modifier = Modifier
+                .semantics { contentDescription = "Current Activity" }
+                .clickable(enabled = true, role = Role.Button) {
+                    onUpdate()
+                }
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(

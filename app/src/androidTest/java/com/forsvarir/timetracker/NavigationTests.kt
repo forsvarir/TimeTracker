@@ -1,16 +1,11 @@
 package com.forsvarir.timetracker
 
-import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-
-import org.junit.Test
-
 import org.junit.Rule
+import org.junit.Test
 
 class NavigationTests {
     @get:Rule
@@ -42,6 +37,22 @@ class NavigationTests {
         }
     }
 
+    @Test
+    fun selectingNewActivityChanges() {
+        launchCurrentActivityScreen(mainActivityRule) {
+            mainActivityRule
+                .onNodeWithContentDescription("Current Activity")
+                .performClick()
+            mainActivityRule
+                .onNodeWithText("Programming")
+                .performClick()
+
+        } verify {
+            mainActivityRule.onNodeWithContentDescription("Current Activity")
+                .assertTextContains("Programming")
+        }
+    }
+
     private fun launchCurrentActivityScreen(
         rule: MainActivityComposeTestRule,
         block: CurrentActivityScreenController.() -> Unit
@@ -54,12 +65,12 @@ typealias MainActivityComposeTestRule = AndroidComposeTestRule<ActivityScenarioR
 
 class CurrentActivityScreenController(private val rule: MainActivityComposeTestRule) {
     fun navigateToActivityHistoryScreen() {
-        rule.onNodeWithContentDescription(rule.activity.getString(R.string.previous_activities))
+        rule.onNodeWithContentDescription(rule.activity.getString(R.string.navigate_to_previous_activities))
             .performClick()
     }
 
     fun navigateCurrentActivityScreen() {
-        rule.onNodeWithContentDescription(rule.activity.getString(R.string.current_activity))
+        rule.onNodeWithContentDescription(rule.activity.getString(R.string.navigate_to_current_activity))
             .performClick()
     }
 
@@ -72,13 +83,13 @@ class CurrentActivityScreenController(private val rule: MainActivityComposeTestR
 
 class CurrentActivityScreenVerifier(private val rule: MainActivityComposeTestRule) {
     fun currentActivityScreenIsOpen() {
-        val currentActivity = rule.activity.getString(R.string.current_activity)
+        val currentActivity = rule.activity.getString(R.string.current_activity_screen_title)
         rule.onNodeWithText(currentActivity)
             .assertIsDisplayed()
     }
 
     fun activityHistoryScreenIsOpen() {
-        val previousActivities = rule.activity.getString(R.string.previous_activities)
+        val previousActivities = rule.activity.getString(R.string.previous_activities_screen_title)
         rule.onNodeWithText(previousActivities)
             .assertIsDisplayed()
     }

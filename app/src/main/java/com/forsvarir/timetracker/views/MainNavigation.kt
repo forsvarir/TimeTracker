@@ -10,7 +10,10 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -29,19 +32,19 @@ class NavigationHooks {
 fun TopNavBar(navController: NavController, title: String) {
     TopAppBar(
         title = {
-            Text(title)
+            Text(title, modifier = Modifier.semantics { contentDescription = "Screen Title" })
         },
         actions = {
             IconButton(onClick = { navController.navigate(NavigationHooks.CURRENT_ACTIVITY) }) {
                 Icon(
                     Icons.Filled.Favorite,
-                    contentDescription = stringResource(R.string.current_activity)
+                    contentDescription = stringResource(R.string.navigate_to_current_activity)
                 )
             }
             IconButton(onClick = { navController.navigate(NavigationHooks.ACTIVITY_HISTORY) }) {
                 Icon(
                     Icons.Filled.List,
-                    contentDescription = stringResource(R.string.previous_activities)
+                    contentDescription = stringResource(R.string.navigate_to_previous_activities)
                 )
             }
         }
@@ -59,7 +62,7 @@ fun MainNavigation(
         startDestination = NavigationHooks.CURRENT_ACTIVITY
     ) {
         composable(NavigationHooks.CURRENT_ACTIVITY) {
-            newTitle(stringResource(R.string.current_activity))
+            newTitle(stringResource(R.string.current_activity_screen_title))
             val currentActivity by viewModel.currentActivity.observeAsState()
             CurrentActivityView(
                 currentActivity?.name ?: "",
@@ -69,7 +72,7 @@ fun MainNavigation(
             }
         }
         composable(NavigationHooks.ACTIVITY_HISTORY) {
-            newTitle(stringResource(R.string.previous_activities))
+            newTitle(stringResource(R.string.previous_activities_screen_title))
             ActivityHistoryView(viewModel.previousActivities.value ?: emptyList())
         }
     }
