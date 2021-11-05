@@ -18,8 +18,11 @@ import com.forsvarir.timetracker.views.MainNavigation
 import com.forsvarir.timetracker.views.TopNavBar
 
 class MainActivity : ComponentActivity() {
-    private val timeTrackerRepository = TimeTrackerRepository()
-    private val viewModel = CurrentActivityViewModel(timeTrackerRepository)
+    companion object {
+        private val timeTrackerRepository = TimeTrackerRepository()
+        private val viewModel = CurrentActivityViewModel(timeTrackerRepository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

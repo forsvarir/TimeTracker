@@ -4,7 +4,6 @@ import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.forsvarir.timetracker.control.CurrentActivityScreenController
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 
@@ -22,7 +21,6 @@ class CurrentActivityTransitionTests {
     }
 
     @Test
-    @Ignore("State not saved correctly yet")
     fun currentActivityPersistsThroughOrientationChange() {
         launchCurrentActivityScreen(mainActivityRule) {
             setCurrentActivity("Programming")
