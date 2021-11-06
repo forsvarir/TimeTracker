@@ -7,7 +7,14 @@ import com.forsvarir.timetracker.viewModels.TimeFactory
 import java.time.Duration
 import java.time.LocalDateTime
 
-class TimeTrackerRepository(possibleActivities: List<String> = listOf("Programming", "Walking", "Sleeping")) {
+class TimeTrackerRepository(
+    possibleActivities: List<String> = listOf(
+        "Programming",
+        "Walking",
+        "Sleeping",
+        "Travelling"
+    )
+) {
     private var availableActivities = MutableLiveData(possibleActivities)
 
     fun availableActivities(): LiveData<List<String>> {
