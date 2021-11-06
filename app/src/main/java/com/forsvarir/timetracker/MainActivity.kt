@@ -16,17 +16,15 @@ import com.forsvarir.timetracker.ui.theme.TimeTrackerTheme
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 import com.forsvarir.timetracker.views.MainNavigation
 import com.forsvarir.timetracker.views.TopNavBar
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
-    companion object {
-        private val timeTrackerRepository = TimeTrackerRepository()
-        private val viewModel = CurrentActivityViewModel(timeTrackerRepository)
-    }
+    private val currentActivityViewModel: CurrentActivityViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainActivityView(viewModel)
+            MainActivityView(currentActivityViewModel)
         }
     }
 }

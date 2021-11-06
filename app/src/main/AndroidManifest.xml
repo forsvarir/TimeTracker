@@ -3,6 +3,7 @@
     package="com.forsvarir.timetracker">
 
     <application
+        android:name=".app.TimeTrackerApplication"
         android:allowBackup="true"
         android:fullBackupOnly="true"
         android:icon="@mipmap/ic_launcher"
