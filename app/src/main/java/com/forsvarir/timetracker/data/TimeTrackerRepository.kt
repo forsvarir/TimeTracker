@@ -1,23 +1,27 @@
 package com.forsvarir.timetracker.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import com.forsvarir.timetracker.viewModels.LocalTimeFactory
 import com.forsvarir.timetracker.viewModels.TimeFactory
 import java.time.Duration
 import java.time.LocalDateTime
+import kotlin.streams.toList
 
 class TimeTrackerRepository(
-    possibleActivities: List<String> = listOf(
-        "Programming",
-        "Walking",
-        "Sleeping",
-        "Travelling"
-    )
+//    possibleActivities: List<String> = listOf(
+//        "Programming",
+//        "Walking",
+//        "Sleeping",
+//        "Travelling"
+//    ),
+    database: TimeTrackerDatabase
 ) {
-    private var availableActivities = MutableLiveData(possibleActivities)
+    private var availableActivities =
+        database.timeTrackerDao.getActivityTypes().stream().map { activity -> activity.name }
+            .toList()
 
-    fun availableActivities(): LiveData<List<String>> {
+    fun availableActivities(): List<String> {
+        Log.println(Log.ERROR, "db", "Reading activityRows")
         return availableActivities
     }
 }

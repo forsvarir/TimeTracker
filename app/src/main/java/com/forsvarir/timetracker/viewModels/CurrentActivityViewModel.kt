@@ -3,17 +3,32 @@ package com.forsvarir.timetracker.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.forsvarir.timetracker.data.ActivityConstants
 import com.forsvarir.timetracker.data.ActivityInstance
-import com.forsvarir.timetracker.data.TimeTrackerRepository
+import com.forsvarir.timetracker.data.TimeTrackerDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.streams.toList
 
 class CurrentActivityViewModel(
-    timeTrackerRepository: TimeTrackerRepository,
-    private val clock: TimeFactory = LocalTimeFactory()
+    private val clock: TimeFactory = LocalTimeFactory(),
+    private val timeTrackerRepository: TimeTrackerDatabase
 ) : ViewModel() {
-    val availableActivities: LiveData<List<String>> = timeTrackerRepository.availableActivities()
+
+    init {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val activities = timeTrackerRepository.timeTrackerDao.getActivityTypes()
+                availableActivities = activities.stream().map { s -> s.name }.toList()
+            }
+        }
+    }
+
+    var availableActivities: List<String> = emptyList()
 
     private val mutablePreviousActivities =
         MutableLiveData<MutableList<ActivityInstance>>(LinkedList())
@@ -35,7 +50,7 @@ class CurrentActivityViewModel(
         }
 
         mutableCurrentActivity.value = ActivityInstance(
-            availableActivities.value?.find { it == newActivity }!!,
+            availableActivities.find { it == newActivity }!!,
             clock,
             activityChangeTime
         )
