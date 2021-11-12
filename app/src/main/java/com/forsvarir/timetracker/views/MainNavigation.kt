@@ -66,7 +66,7 @@ fun MainNavigation(
             val currentActivity by viewModel.currentActivity.observeAsState()
             CurrentActivityView(
                 currentActivity?.name ?: "",
-                viewModel.availableActivities
+                viewModel.availableActivities.value!!
 //                viewModel.availableActivities.value ?: emptyList()
             ) {
                 viewModel.startActivity(it)

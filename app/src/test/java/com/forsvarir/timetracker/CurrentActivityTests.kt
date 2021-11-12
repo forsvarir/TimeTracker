@@ -4,20 +4,40 @@ import com.forsvarir.timetracker.data.ActivityConstants
 import com.forsvarir.timetracker.data.TimeTrackerRepository
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 import com.forsvarir.timetracker.viewModels.TimeFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
 
+@ExperimentalCoroutinesApi
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CurrentActivityTests {
+    val dispatcher = TestCoroutineDispatcher()
+
+    @BeforeEach
+    fun beforeEach() {
+        Dispatchers.setMain(dispatcher)
+    }
+
+    @AfterEach
+    fun afterEach() {
+        Dispatchers.resetMain()
+    }
+
     @Test
     fun activitiesAvailable() {
         val possibleActivities = listOf("Programming", "Walking", "Sleeping")
 
-        val viewModel = CurrentActivityViewModel(TimeTrackerRepository(possibleActivities))
+        val viewModel = createViewModel(possibleActivities, clock = ProgrammableTimeFactory())
 
-        assertThat(viewModel.availableActivities.value).containsExactly(
+        assertThat(viewModel.availableActivities?.value).containsExactly(
             "Programming",
             "Walking",
             "Sleeping"
@@ -27,7 +47,7 @@ class CurrentActivityTests {
     @Test
     fun initialState() {
         val possibleActivities = listOf("Programming", "Walking", "Sleeping")
-        val model = CurrentActivityViewModel(TimeTrackerRepository(possibleActivities))
+        val model = CurrentActivityViewModel(StubbedTimeTrackerRepository(possibleActivities))
 
         assertThat(model.currentActivity.value).isEqualTo(ActivityConstants.Unknown)
         assertThat(model.previousActivities.value).isEmpty()
@@ -37,7 +57,7 @@ class CurrentActivityTests {
     fun noCurrentActivity_newActivity() {
         val possibleActivities = listOf("Programming", "Walking", "Sleeping")
         val clock = ProgrammableTimeFactory()
-        val model = CurrentActivityViewModel(TimeTrackerRepository(possibleActivities), clock)
+        val model = createViewModel(possibleActivities, clock)
 
         model.startActivity("Programming")
 
@@ -57,7 +77,7 @@ class CurrentActivityTests {
         val initialActivityStartTime = LocalDateTime.of(2021, 1, 2, 5, 30)
         val secondActivityStartTime = initialActivityStartTime.plusHours(1)
         val clock = ProgrammableTimeFactory(initialActivityStartTime)
-        val model = CurrentActivityViewModel(TimeTrackerRepository(possibleActivities), clock)
+        val model = createViewModel(possibleActivities, clock)
 
         model.startActivity("Programming")
 
@@ -85,7 +105,7 @@ class CurrentActivityTests {
         val initialActivityStartTime = LocalDateTime.of(2021, 1, 2, 5, 30)
         val secondActivityStartTime = initialActivityStartTime.plusHours(1)
         val clock = ProgrammableTimeFactory(initialActivityStartTime)
-        val model = CurrentActivityViewModel(TimeTrackerRepository(possibleActivities), clock)
+        val model = createViewModel(possibleActivities, clock)
 
         model.startActivity("Programming")
         clock.setNow(secondActivityStartTime)
@@ -99,6 +119,17 @@ class CurrentActivityTests {
 
         assertThat(model.previousActivities.value).hasSize(0)
     }
+
+    private fun createViewModel(
+        possibleActivities: List<String>,
+        clock: ProgrammableTimeFactory
+    ): CurrentActivityViewModel {
+        val model =
+            CurrentActivityViewModel(StubbedTimeTrackerRepository(possibleActivities), clock)
+        Thread.sleep(10) // TODO - There must be a better way to way for the IO thread to run
+        return model
+    }
+
 }
 
 class ProgrammableTimeFactory(initialTime: LocalDateTime = LocalDateTime.now()) :
@@ -112,4 +143,12 @@ class ProgrammableTimeFactory(initialTime: LocalDateTime = LocalDateTime.now()) 
     fun setNow(newNow: LocalDateTime) {
         currentTime = newNow
     }
+}
+
+class StubbedTimeTrackerRepository(private val availableActivities: List<String> = emptyList()) :
+    TimeTrackerRepository {
+    override fun availableActivities(): List<String> {
+        return availableActivities
+    }
+
 }

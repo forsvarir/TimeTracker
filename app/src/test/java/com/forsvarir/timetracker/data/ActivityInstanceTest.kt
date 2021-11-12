@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class ActivityInstanceTest {
-
     @Test
     fun duration_noEndTime() {
         val clock = ProgrammableTimeFactory()
