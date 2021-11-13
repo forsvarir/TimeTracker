@@ -21,7 +21,7 @@ class CurrentActivityViewModel(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                availableActivities = MutableLiveData(timeTrackerRepository.availableActivities())
+                availableActivities = timeTrackerRepository.availableActivities()
             }
         }
     }

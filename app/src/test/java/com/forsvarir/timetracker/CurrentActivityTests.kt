@@ -1,5 +1,7 @@
 package com.forsvarir.timetracker
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.forsvarir.timetracker.data.ActivityConstants
 import com.forsvarir.timetracker.data.TimeTrackerRepository
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
@@ -37,7 +39,7 @@ class CurrentActivityTests {
 
         val viewModel = createViewModel(possibleActivities, clock = ProgrammableTimeFactory())
 
-        assertThat(viewModel.availableActivities?.value).containsExactly(
+        assertThat(viewModel.availableActivities.value).containsExactly(
             "Programming",
             "Walking",
             "Sleeping"
@@ -126,7 +128,7 @@ class CurrentActivityTests {
     ): CurrentActivityViewModel {
         val model =
             CurrentActivityViewModel(StubbedTimeTrackerRepository(possibleActivities), clock)
-        Thread.sleep(10) // TODO - There must be a better way to way for the IO thread to run
+        Thread.sleep(50) // TODO - There must be a better way to way for the IO thread to run
         return model
     }
 
@@ -147,8 +149,8 @@ class ProgrammableTimeFactory(initialTime: LocalDateTime = LocalDateTime.now()) 
 
 class StubbedTimeTrackerRepository(private val availableActivities: List<String> = emptyList()) :
     TimeTrackerRepository {
-    override fun availableActivities(): List<String> {
-        return availableActivities
+    override fun availableActivities(): LiveData<List<String>> {
+        return MutableLiveData(availableActivities)
     }
 
 }

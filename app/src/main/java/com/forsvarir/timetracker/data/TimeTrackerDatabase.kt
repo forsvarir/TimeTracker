@@ -16,8 +16,7 @@ abstract class TimeTrackerDatabase : RoomDatabase() {
 class TrackerDbOpen(
     private val scope: CoroutineScope,
     private val timeTrackerDatabase: () -> TimeTrackerDatabase
-) :
-    RoomDatabase.Callback() {
+) : RoomDatabase.Callback() {
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
 
