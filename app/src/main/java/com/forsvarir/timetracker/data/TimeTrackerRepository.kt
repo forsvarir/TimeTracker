@@ -4,8 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.forsvarir.timetracker.viewModels.LocalTimeFactory
 import com.forsvarir.timetracker.viewModels.TimeFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.Duration
 import java.time.LocalDateTime
+import kotlin.coroutines.CoroutineContext
 import kotlin.streams.toList
 
 interface TimeTrackerRepository {
@@ -13,24 +18,34 @@ interface TimeTrackerRepository {
 }
 
 class TimeTrackerRepositoryImpl(
-//    possibleActivities: List<String> = listOf(
-//        "Programming",
-//        "Walking",
-//        "Sleeping",
-//        "Travelling"
-//    ),
-    private val database: TimeTrackerDatabase
+    private val database: TimeTrackerDatabase,
+    private val dataAccessScope: DataAccessScope
 ) : TimeTrackerRepository {
     private var mutableActivities: MutableLiveData<List<String>> = MutableLiveData(emptyList())
     private var activities: LiveData<List<String>> = mutableActivities
 
     override fun availableActivities(): LiveData<List<String>> {
-        mutableActivities.postValue(
-            database.timeTrackerDao.getActivityTypes().stream().map { activity -> activity.name }
-                .toList())
-
+        if (mutableActivities.value?.size ?: 0 <= 0) {
+            loadActivities()
+        }
         return activities
     }
+
+    private fun loadActivities() {
+        dataAccessScope.launch {
+            withContext(Dispatchers.IO) {
+                mutableActivities.postValue(
+                    database.timeTrackerDao.getActivityTypes().stream()
+                        .map { activity -> activity.name }
+                        .toList())
+            }
+        }
+    }
+}
+
+class DataAccessScope(override val coroutineContext: CoroutineContext = Dispatchers.IO) :
+    CoroutineScope {
+
 }
 
 data class ActivityInstance(

@@ -3,10 +3,7 @@ package com.forsvarir.timetracker.app
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
-import com.forsvarir.timetracker.data.TimeTrackerDatabase
-import com.forsvarir.timetracker.data.TimeTrackerRepository
-import com.forsvarir.timetracker.data.TimeTrackerRepositoryImpl
-import com.forsvarir.timetracker.data.TrackerDbOpen
+import com.forsvarir.timetracker.data.*
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 import kotlinx.coroutines.MainScope
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -44,7 +41,13 @@ val applicationModule = module {
         ).fallbackToDestructiveMigration()
             .build()
     }
-    factory<TimeTrackerRepository> { TimeTrackerRepositoryImpl(database = get()) }
+    single { DataAccessScope() }
+    factory<TimeTrackerRepository> {
+        TimeTrackerRepositoryImpl(
+            database = get(),
+            dataAccessScope = get()
+        )
+    }
 
     viewModel {
         CurrentActivityViewModel(

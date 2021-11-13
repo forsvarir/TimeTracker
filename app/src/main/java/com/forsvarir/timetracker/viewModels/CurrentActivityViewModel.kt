@@ -3,30 +3,18 @@ package com.forsvarir.timetracker.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.forsvarir.timetracker.data.ActivityConstants
 import com.forsvarir.timetracker.data.ActivityInstance
 import com.forsvarir.timetracker.data.TimeTrackerRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.util.*
 
 class CurrentActivityViewModel(
-    private val timeTrackerRepository: TimeTrackerRepository,
+    timeTrackerRepository: TimeTrackerRepository,
     private val clock: TimeFactory = LocalTimeFactory()
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                availableActivities = timeTrackerRepository.availableActivities()
-            }
-        }
-    }
-
-    var availableActivities: LiveData<List<String>> = MutableLiveData(emptyList())
+    var availableActivities: LiveData<List<String>> = timeTrackerRepository.availableActivities()
 
     private val mutablePreviousActivities =
         MutableLiveData<MutableList<ActivityInstance>>(LinkedList())
