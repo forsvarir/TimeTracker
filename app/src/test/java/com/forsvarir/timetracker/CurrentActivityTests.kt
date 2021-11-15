@@ -44,7 +44,7 @@ class CurrentActivityTests {
             )
 
 
-        assertThat(viewModel.availableActivities.value).containsExactly(
+        assertThat(viewModel.availableActivities().value).containsExactly(
             "Programming",
             "Walking",
             "Sleeping"
@@ -148,6 +148,10 @@ class StubbedTimeTrackerRepository(private val availableActivities: List<String>
     TimeTrackerRepository {
     override fun availableActivities(): LiveData<List<String>> {
         return MutableLiveData(availableActivities)
+    }
+
+    override fun ready(): LiveData<Boolean> {
+        return MutableLiveData(true)
     }
 
 }

@@ -8,6 +8,7 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,15 +17,24 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 @Preview
 @Composable
 fun CurrentActivityView(
     currentActivity: String = "Doing Stuff",
-    availableActivities: List<String> = listOf("Doing Stuff", "Other Stuff"),
+    availableActivities: LiveData<List<String>> = MutableLiveData(
+        listOf(
+            "Doing Stuff",
+            "Other Stuff"
+        )
+    ),
+    ready: Boolean = true,
     onCurrentActivityChanged: (String) -> Unit = {}
 ) {
     var update by remember { mutableStateOf(false) }
+    val activities = availableActivities.observeAsState()
 
     Column(Modifier.padding(all = 8.dp)) {
         Box(
@@ -33,7 +43,7 @@ fun CurrentActivityView(
             if (!update) {
                 CurrentActivityStatus(currentActivity) { update = true }
             } else {
-                SelectCurrentActivity(currentActivity, availableActivities) {
+                SelectCurrentActivity(currentActivity, activities.value!!) {
                     onCurrentActivityChanged(it)
                     update = false
                 }

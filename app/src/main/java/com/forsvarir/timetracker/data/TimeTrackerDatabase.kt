@@ -1,5 +1,7 @@
 package com.forsvarir.timetracker.data
 
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -10,6 +12,8 @@ import kotlinx.coroutines.withContext
 
 @Database(entities = [ActivityType::class], version = 1, exportSchema = false)
 abstract class TimeTrackerDatabase : RoomDatabase() {
+    val isOpen: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+
     abstract val timeTrackerDao: TimeTrackerDao
 }
 
@@ -19,19 +23,30 @@ class TrackerDbOpen(
 ) : RoomDatabase.Callback() {
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
-
-        val dbs = timeTrackerDatabase()
-        scope.launch {
-            withContext(Dispatchers.IO) {
-                dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Travelling"))
-                dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Working"))
-                dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Sleeping"))
-                dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Programming"))
-            }
-        }
+        Log.println(Log.ERROR, "ready", "Create - Starting")
     }
 
     override fun onOpen(db: SupportSQLiteDatabase) {
         super.onOpen(db)
+
+        val dbs = timeTrackerDatabase()
+        if (!dbs.isOpen.value!!) {
+            createDatabase(dbs)
+        }
+    }
+
+    private fun createDatabase(dbs: TimeTrackerDatabase) {
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                if (dbs.timeTrackerDao.countActivityTypes() == 0) {
+
+                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Travelling"))
+                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Working"))
+                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Sleeping"))
+                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Programming"))
+                }
+                dbs.isOpen.postValue(true)
+            }
+        }
     }
 }

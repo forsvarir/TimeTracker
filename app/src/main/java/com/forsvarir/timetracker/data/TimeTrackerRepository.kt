@@ -15,6 +15,7 @@ import kotlin.streams.toList
 
 interface TimeTrackerRepository {
     fun availableActivities(): LiveData<List<String>>
+    fun ready(): LiveData<Boolean>
 }
 
 class TimeTrackerRepositoryImpl(
@@ -23,9 +24,22 @@ class TimeTrackerRepositoryImpl(
 ) : TimeTrackerRepository {
     private var mutableActivities: MutableLiveData<List<String>> = MutableLiveData(emptyList())
     private var activities: LiveData<List<String>> = mutableActivities
+    private val databaseReady: LiveData<Boolean> = database.isOpen
+
+    init {
+        dataAccessScope.launch {
+            withContext(Dispatchers.IO) {
+                database.timeTrackerDao.getActivityTypes().stream()
+                    .map { activity -> activity.name }
+                    .toList()
+            }
+        }
+    }
+
+    override fun ready(): LiveData<Boolean> = databaseReady
 
     override fun availableActivities(): LiveData<List<String>> {
-        if (mutableActivities.value?.size ?: 0 <= 0) {
+        if (databaseReady.value!! && mutableActivities.value?.size ?: 0 <= 0) {
             loadActivities()
         }
         return activities
@@ -34,10 +48,11 @@ class TimeTrackerRepositoryImpl(
     private fun loadActivities() {
         dataAccessScope.launch {
             withContext(Dispatchers.IO) {
-                mutableActivities.postValue(
-                    database.timeTrackerDao.getActivityTypes().stream()
-                        .map { activity -> activity.name }
-                        .toList())
+                val activities = database.timeTrackerDao.getActivityTypes().stream()
+                    .map { activity -> activity.name }
+                    .toList()
+
+                mutableActivities.postValue(activities)
             }
         }
     }

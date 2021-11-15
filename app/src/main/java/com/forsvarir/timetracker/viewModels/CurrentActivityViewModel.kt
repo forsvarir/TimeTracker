@@ -10,11 +10,12 @@ import java.time.LocalDateTime
 import java.util.*
 
 class CurrentActivityViewModel(
-    timeTrackerRepository: TimeTrackerRepository,
+    private val timeTrackerRepository: TimeTrackerRepository,
     private val clock: TimeFactory = LocalTimeFactory()
 ) : ViewModel() {
 
-    var availableActivities: LiveData<List<String>> = timeTrackerRepository.availableActivities()
+    fun availableActivities() = timeTrackerRepository.availableActivities()
+    val ready = timeTrackerRepository.ready()
 
     private val mutablePreviousActivities =
         MutableLiveData<MutableList<ActivityInstance>>(LinkedList())
@@ -36,7 +37,7 @@ class CurrentActivityViewModel(
         }
 
         mutableCurrentActivity.value = ActivityInstance(
-            availableActivities.value?.find { it == newActivity }!!,
+            newActivity,
             clock,
             activityChangeTime
         )

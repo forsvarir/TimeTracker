@@ -13,5 +13,5 @@ interface TimeTrackerDao {
     fun getActivityTypes(): List<ActivityType>
 
     @Query("SELECT COUNT(1) FROM activity_type")
-    fun countActivities(): Int
+    fun countActivityTypes(): Int
 }

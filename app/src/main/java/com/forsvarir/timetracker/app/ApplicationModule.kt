@@ -33,7 +33,7 @@ val applicationModule = module {
         Room.databaseBuilder(
             (TimeTrackerApplication.getContext()).applicationContext,
             TimeTrackerDatabase::class.java,
-            "time_tracker_database_v2"
+            "time_tracker_database_v01"
         ).addCallback(
             TrackerDbOpen(
                 MainScope()
