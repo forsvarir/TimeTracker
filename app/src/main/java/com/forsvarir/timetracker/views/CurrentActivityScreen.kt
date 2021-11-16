@@ -35,7 +35,6 @@ private fun PreviewCurrentActivityView() {
                     "Other Stuff"
                 )
             ),
-            ready = true,
             onCurrentActivityChanged = {}
         )
     }
@@ -45,7 +44,6 @@ private fun PreviewCurrentActivityView() {
 fun CurrentActivityView(
     currentActivity: String = "Doing Stuff",
     availableActivities: LiveData<List<String>>,
-    ready: Boolean,
     onCurrentActivityChanged: (String) -> Unit
 ) {
     var update by remember { mutableStateOf(false) }

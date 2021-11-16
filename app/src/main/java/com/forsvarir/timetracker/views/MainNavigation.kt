@@ -64,11 +64,9 @@ fun MainNavigation(
         composable(NavigationHooks.CURRENT_ACTIVITY) {
             newTitle(stringResource(R.string.TitleCurrentActivityScreen))
             val currentActivity by viewModel.currentActivity.observeAsState()
-            val ready by viewModel.ready.observeAsState()
             CurrentActivityView(
                 currentActivity?.name ?: "",
                 viewModel.availableActivities(),
-                ready!!
             ) {
                 viewModel.startActivity(it)
             }
