@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">TimeTracker</string>
-    <string name="title_activity_current_task">CurrentTaskActivity</string>
-    <string name="current_activity_screen_title">Current Activity</string>
-    <string name="navigate_to_current_activity">Navigate to current activity</string>
-    <string name="navigate_to_previous_activities">Navigate to previous activities</string>
-    <string name="previous_activities_screen_title">Previous Activities</string>
+    <string name="AppName">TimeTracker</string>
+    <string name="TitleActivityCurrentTask">CurrentTaskActivity</string>
+    <string name="TitleCurrentActivityScreen">Current Activity</string>
+    <string name="TitlePreviousActivitiesScreen">Previous Activities</string>
+    <string name="NavigateToCurrentActivity">Navigate to current activity</string>
+    <string name="NavigateToPreviousActivities">Navigate to previous activities</string>
+    <string name="CurrentRunningActivity">Current Running Activity</string>
 </resources>

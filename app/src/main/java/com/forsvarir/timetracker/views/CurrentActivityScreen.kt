@@ -11,7 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -19,19 +19,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.forsvarir.timetracker.R
+import com.forsvarir.timetracker.ui.theme.TimeTrackerTheme
 
-@Preview
+
+@Preview(widthDp = 320, heightDp = 480)
+@Composable
+private fun PreviewCurrentActivityView() {
+    TimeTrackerTheme {
+        CurrentActivityView(
+            currentActivity = "Doing Stuff",
+            availableActivities = MutableLiveData(
+                listOf(
+                    "Doing Stuff",
+                    "Other Stuff"
+                )
+            ),
+            ready = true,
+            onCurrentActivityChanged = {}
+        )
+    }
+}
+
 @Composable
 fun CurrentActivityView(
     currentActivity: String = "Doing Stuff",
-    availableActivities: LiveData<List<String>> = MutableLiveData(
-        listOf(
-            "Doing Stuff",
-            "Other Stuff"
-        )
-    ),
-    ready: Boolean = true,
-    onCurrentActivityChanged: (String) -> Unit = {}
+    availableActivities: LiveData<List<String>>,
+    ready: Boolean,
+    onCurrentActivityChanged: (String) -> Unit
 ) {
     var update by remember { mutableStateOf(false) }
     val activities = availableActivities.observeAsState()
@@ -54,11 +69,12 @@ fun CurrentActivityView(
 
 @Composable
 private fun CurrentActivityStatus(currentActivity: String, onUpdate: () -> Unit) {
+    val currentRunningActivityDescription = stringResource(R.string.CurrentRunningActivity)
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(text = currentActivity,
             style = MaterialTheme.typography.subtitle2,
             modifier = Modifier
-                .semantics { contentDescription = "Current Activity" }
+                .semantics { contentDescription = currentRunningActivityDescription }
                 .clickable(enabled = true, role = Role.Button) {
                     onUpdate()
                 }
@@ -86,13 +102,13 @@ fun SelectCurrentActivity(
             onDismissRequest = { onSelected(currentItem) },
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Red)
+                .background(MaterialTheme.colors.secondaryVariant)
         ) {
             availableActivities.forEach { itemText ->
                 DropdownMenuItem(onClick = {
                     onSelected(itemText)
                 }) {
-                    Text(itemText)
+                    Text(itemText, color = MaterialTheme.colors.secondary)
                 }
             }
         }

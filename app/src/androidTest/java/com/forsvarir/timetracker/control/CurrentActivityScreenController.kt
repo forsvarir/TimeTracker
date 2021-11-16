@@ -14,18 +14,18 @@ import java.lang.Thread.sleep
 
 class CurrentActivityScreenController(private val rule: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>) {
     fun navigateToActivityHistoryScreen() {
-        rule.onNodeWithContentDescription(rule.activity.getString(R.string.navigate_to_previous_activities))
+        rule.onNodeWithContentDescription(rule.activity.getString(R.string.NavigateToPreviousActivities))
             .performClick()
     }
 
     fun navigateToCurrentActivityScreen() {
-        rule.onNodeWithContentDescription(rule.activity.getString(R.string.navigate_to_current_activity))
+        rule.onNodeWithContentDescription(rule.activity.getString(R.string.NavigateToCurrentActivity))
             .performClick()
     }
 
     fun setCurrentActivity(newActivity: String) {
         rule
-            .onNodeWithContentDescription("Current Activity")
+            .onNodeWithContentDescription(rule.activity.getString(R.string.CurrentRunningActivity))
             .performClick()
         rule
             .onNodeWithText(newActivity)

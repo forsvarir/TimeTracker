@@ -38,13 +38,13 @@ fun TopNavBar(navController: NavController, title: String) {
             IconButton(onClick = { navController.navigate(NavigationHooks.CURRENT_ACTIVITY) }) {
                 Icon(
                     Icons.Filled.Favorite,
-                    contentDescription = stringResource(R.string.navigate_to_current_activity)
+                    contentDescription = stringResource(R.string.NavigateToCurrentActivity)
                 )
             }
             IconButton(onClick = { navController.navigate(NavigationHooks.ACTIVITY_HISTORY) }) {
                 Icon(
                     Icons.Filled.List,
-                    contentDescription = stringResource(R.string.navigate_to_previous_activities)
+                    contentDescription = stringResource(R.string.NavigateToPreviousActivities)
                 )
             }
         }
@@ -62,7 +62,7 @@ fun MainNavigation(
         startDestination = NavigationHooks.CURRENT_ACTIVITY
     ) {
         composable(NavigationHooks.CURRENT_ACTIVITY) {
-            newTitle(stringResource(R.string.current_activity_screen_title))
+            newTitle(stringResource(R.string.TitleCurrentActivityScreen))
             val currentActivity by viewModel.currentActivity.observeAsState()
             val ready by viewModel.ready.observeAsState()
             CurrentActivityView(
@@ -74,7 +74,7 @@ fun MainNavigation(
             }
         }
         composable(NavigationHooks.ACTIVITY_HISTORY) {
-            newTitle(stringResource(R.string.previous_activities_screen_title))
+            newTitle(stringResource(R.string.TitlePreviousActivitiesScreen))
             ActivityHistoryView(viewModel.previousActivities.value ?: emptyList())
         }
     }
