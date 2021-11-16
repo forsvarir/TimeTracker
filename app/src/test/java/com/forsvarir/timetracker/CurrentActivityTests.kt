@@ -6,32 +6,13 @@ import com.forsvarir.timetracker.data.ActivityConstants
 import com.forsvarir.timetracker.data.TimeTrackerRepository
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 import com.forsvarir.timetracker.viewModels.TimeFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
 
-@ExperimentalCoroutinesApi
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CurrentActivityTests {
-    val dispatcher = TestCoroutineDispatcher()
-
-    @BeforeEach
-    fun beforeEach() {
-        Dispatchers.setMain(dispatcher)
-    }
-
-    @AfterEach
-    fun afterEach() {
-        Dispatchers.resetMain()
-    }
 
     @Test
     fun activitiesAvailable() {
@@ -42,7 +23,6 @@ class CurrentActivityTests {
                 StubbedTimeTrackerRepository(possibleActivities),
                 ProgrammableTimeFactory()
             )
-
 
         assertThat(viewModel.availableActivities().value).containsExactly(
             "Programming",
@@ -77,7 +57,6 @@ class CurrentActivityTests {
 
         assertThat(model.previousActivities.value).isEmpty()
     }
-
 
     @Test
     fun runningActivity_newActivity() {

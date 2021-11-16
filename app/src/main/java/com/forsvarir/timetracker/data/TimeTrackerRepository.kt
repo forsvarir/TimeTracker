@@ -1,5 +1,6 @@
 package com.forsvarir.timetracker.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.forsvarir.timetracker.viewModels.LocalTimeFactory
@@ -27,13 +28,7 @@ class TimeTrackerRepositoryImpl(
     private val databaseReady: LiveData<Boolean> = database.isOpen
 
     init {
-        dataAccessScope.launch {
-            withContext(Dispatchers.IO) {
-                database.timeTrackerDao.getActivityTypes().stream()
-                    .map { activity -> activity.name }
-                    .toList()
-            }
-        }
+        loadActivities()
     }
 
     override fun ready(): LiveData<Boolean> = databaseReady
@@ -46,6 +41,7 @@ class TimeTrackerRepositoryImpl(
     }
 
     private fun loadActivities() {
+        Log.println(Log.ERROR, "xyz", "LoadActivities!!!!!")
         dataAccessScope.launch {
             withContext(Dispatchers.IO) {
                 val activities = database.timeTrackerDao.getActivityTypes().stream()

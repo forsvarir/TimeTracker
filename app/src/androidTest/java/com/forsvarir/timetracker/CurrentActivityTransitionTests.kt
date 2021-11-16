@@ -37,16 +37,17 @@ class CurrentActivityTransitionTests {
         var initialNodeCount = 0
         launchCurrentActivityScreen(mainActivityRule) {
             navigateToActivityHistoryScreen()
-            val rule = mainActivityRule
-            initialNodeCount = rule.onAllNodesWithText("Travelling")
+            initialNodeCount = mainActivityRule.onAllNodesWithText("Travelling")
                 .fetchSemanticsNodes(atLeastOneRootRequired = false).size
+
             navigateToCurrentActivityScreen()
             setCurrentActivity("Travelling")
             setCurrentActivity("Programming")
+
             navigateToActivityHistoryScreen()
         } verify {
-            val rule = mainActivityRule
-            rule.onAllNodesWithText("Travelling").assertCountEquals(initialNodeCount + 1)
+            mainActivityRule.onAllNodesWithText("Travelling")
+                .assertCountEquals(initialNodeCount + 1)
         }
     }
 

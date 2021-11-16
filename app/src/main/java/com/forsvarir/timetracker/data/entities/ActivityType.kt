@@ -1,4 +1,4 @@
-package com.forsvarir.timetracker.data
+package com.forsvarir.timetracker.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

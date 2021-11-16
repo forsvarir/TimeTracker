@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.forsvarir.timetracker.data.entities.ActivityType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

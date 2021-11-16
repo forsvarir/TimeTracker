@@ -33,7 +33,10 @@ class CurrentActivityScreenController(private val rule: AndroidComposeTestRule<A
     }
 
     fun orientatePortrait() {
-        setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, Configuration.ORIENTATION_PORTRAIT)
+        setOrientation(
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT,
+            Configuration.ORIENTATION_PORTRAIT
+        )
     }
 
     fun orientateLandscape() {

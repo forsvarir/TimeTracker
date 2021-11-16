@@ -3,6 +3,7 @@ package com.forsvarir.timetracker.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.forsvarir.timetracker.data.entities.ActivityType
 
 @Dao
 interface TimeTrackerDao {
