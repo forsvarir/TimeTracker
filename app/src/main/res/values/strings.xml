@@ -6,4 +6,5 @@
     <string name="NavigateToCurrentActivity">Navigate to current activity</string>
     <string name="NavigateToPreviousActivities">Navigate to previous activities</string>
     <string name="CurrentRunningActivity">Current Running Activity</string>
+    <string name="RunningActivityProgress">Running Activity Progress</string>
 </resources>

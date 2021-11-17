@@ -26,4 +26,9 @@ class CurrentActivityScreenVerifier(private val rule: AndroidComposeTestRule<Act
         rule.onNodeWithContentDescription(rule.activity.getString(R.string.CurrentRunningActivity))
             .assertTextContains(activityName)
     }
+
+    fun currentRunningActivityIs(activityName: String) {
+        rule.onNodeWithContentDescription(rule.activity.getString(R.string.RunningActivityProgress))
+            .assertTextContains(activityName)
+    }
 }

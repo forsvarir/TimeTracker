@@ -19,6 +19,7 @@ class CurrentActivityTransitionTests {
             setCurrentActivity("Programming")
         } verify {
             currentActivityIs("Programming")
+            currentRunningActivityIs("Programming")
         }
     }
 
@@ -29,6 +30,7 @@ class CurrentActivityTransitionTests {
             orientateLandscape()
         } verify {
             currentActivityIs("Programming")
+            currentRunningActivityIs("Programming")
         }
     }
 
@@ -48,6 +50,16 @@ class CurrentActivityTransitionTests {
         } verify {
             mainActivityRule.onAllNodesWithText("Travelling")
                 .assertCountEquals(initialNodeCount + 1)
+        }
+    }
+
+    @Test
+    fun currentRunningActivityIsVisibleOnPreviousActivityHistory() {
+        launchCurrentActivityScreen(mainActivityRule) {
+            setCurrentActivity("Travelling")
+            navigateToActivityHistoryScreen()
+        } verify {
+            currentRunningActivityIs("Travelling")
         }
     }
 

@@ -58,7 +58,7 @@ private fun EventRow(activity: String, duration: String) {
     }
 }
 
-fun stubbedEvents(): List<ActivityInstance> {
+private fun stubbedEvents(): List<ActivityInstance> {
     return listOf(
         ActivityInstance("Programming"),
         ActivityInstance("Walking"),
