@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.room.Room
 import com.forsvarir.timetracker.data.*
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
+import com.forsvarir.timetracker.viewModels.LocalTimeFactory
+import com.forsvarir.timetracker.viewModels.TimeFactory
 import kotlinx.coroutines.MainScope
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -42,6 +44,7 @@ val applicationModule = module {
             .build()
     }
     single { DataAccessScope() }
+    single<TimeFactory> { LocalTimeFactory() }
     factory<TimeTrackerRepository> {
         TimeTrackerRepositoryImpl(
             database = get(),
@@ -51,7 +54,8 @@ val applicationModule = module {
 
     viewModel {
         CurrentActivityViewModel(
-            timeTrackerRepository = get()
+            timeTrackerRepository = get(),
+            clock = get()
         )
     }
 }

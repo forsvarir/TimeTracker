@@ -11,7 +11,7 @@ import java.util.*
 
 class CurrentActivityViewModel(
     private val timeTrackerRepository: TimeTrackerRepository,
-    private val clock: TimeFactory = LocalTimeFactory()
+    private val clock: TimeFactory
 ) : ViewModel() {
 
     fun availableActivities() = timeTrackerRepository.availableActivities()

@@ -1,15 +1,15 @@
 package com.forsvarir.timetracker.views
 
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -19,6 +19,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.forsvarir.timetracker.R
+import com.forsvarir.timetracker.data.ActivityInstance
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 
 class NavigationHooks {
@@ -74,6 +75,25 @@ fun MainNavigation(
         composable(NavigationHooks.ACTIVITY_HISTORY) {
             newTitle(stringResource(R.string.TitlePreviousActivitiesScreen))
             ActivityHistoryView(viewModel.previousActivities.value ?: emptyList())
+        }
+    }
+}
+
+@Composable
+fun BottomInfoBar(currentActivity: ActivityInstance) {
+    val runningActivityDescription = stringResource(R.string.RunningActivityProgress)
+    BottomAppBar {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (currentActivity.name != "Unknown") {
+                Text(
+                    text = "${currentActivity.name} ${currentActivity.duration}",
+                    modifier = Modifier.semantics {
+                        contentDescription = runningActivityDescription
+                    })
+            }
         }
     }
 }

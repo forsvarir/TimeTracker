@@ -1,13 +1,13 @@
 package com.forsvarir.timetracker.data
 
-import com.forsvarir.timetracker.ProgrammableTimeFactory
+import com.forsvarir.timetracker.CurrentActivityTests
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class ActivityInstanceTest {
     @Test
     fun duration_noEndTime() {
-        val clock = ProgrammableTimeFactory()
+        val clock = CurrentActivityTests.ProgrammableTimeFactory()
         val instance = ActivityInstance("ignored", clock)
 
         clock.setNow(
@@ -22,7 +22,7 @@ class ActivityInstanceTest {
 
     @Test
     fun duration_withEndTime() {
-        val clock = ProgrammableTimeFactory()
+        val clock = CurrentActivityTests.ProgrammableTimeFactory()
         val instance = ActivityInstance("ignored", clock)
 
         instance.endTime =

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.forsvarir.timetracker.data.ActivityConstants
 import com.forsvarir.timetracker.data.TimeTrackerRepository
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
+import com.forsvarir.timetracker.viewModels.LocalTimeFactory
 import com.forsvarir.timetracker.viewModels.TimeFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -34,7 +35,10 @@ class CurrentActivityTests {
     @Test
     fun initialState() {
         val possibleActivities = listOf("Programming", "Walking", "Sleeping")
-        val model = CurrentActivityViewModel(StubbedTimeTrackerRepository(possibleActivities))
+        val model = CurrentActivityViewModel(
+            StubbedTimeTrackerRepository(possibleActivities),
+            LocalTimeFactory()
+        )
 
         assertThat(model.currentActivity.value).isEqualTo(ActivityConstants.Unknown)
         assertThat(model.previousActivities.value).isEmpty()
@@ -108,29 +112,29 @@ class CurrentActivityTests {
 
         assertThat(model.previousActivities.value).hasSize(0)
     }
-}
 
-class ProgrammableTimeFactory(initialTime: LocalDateTime = LocalDateTime.now()) :
-    TimeFactory {
-    private var currentTime: LocalDateTime = initialTime
+    class ProgrammableTimeFactory(initialTime: LocalDateTime = LocalDateTime.now()) :
+        TimeFactory {
+        private var currentTime: LocalDateTime = initialTime
 
-    override fun now(): LocalDateTime {
-        return currentTime
+        override fun now(): LocalDateTime {
+            return currentTime
+        }
+
+        fun setNow(newNow: LocalDateTime) {
+            currentTime = newNow
+        }
     }
 
-    fun setNow(newNow: LocalDateTime) {
-        currentTime = newNow
-    }
-}
+    class StubbedTimeTrackerRepository(private val availableActivities: List<String> = emptyList()) :
+        TimeTrackerRepository {
+        override fun availableActivities(): LiveData<List<String>> {
+            return MutableLiveData(availableActivities)
+        }
 
-class StubbedTimeTrackerRepository(private val availableActivities: List<String> = emptyList()) :
-    TimeTrackerRepository {
-    override fun availableActivities(): LiveData<List<String>> {
-        return MutableLiveData(availableActivities)
-    }
+        override fun ready(): LiveData<Boolean> {
+            return MutableLiveData(true)
+        }
 
-    override fun ready(): LiveData<Boolean> {
-        return MutableLiveData(true)
     }
-
 }
