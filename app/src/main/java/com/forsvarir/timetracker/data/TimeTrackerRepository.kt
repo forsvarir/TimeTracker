@@ -1,6 +1,5 @@
 package com.forsvarir.timetracker.data
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.forsvarir.timetracker.viewModels.LocalTimeFactory
@@ -41,7 +40,6 @@ class TimeTrackerRepositoryImpl(
     }
 
     private fun loadActivities() {
-        Log.println(Log.ERROR, "xyz", "LoadActivities!!!!!")
         dataAccessScope.launch {
             withContext(Dispatchers.IO) {
                 val activities = database.timeTrackerDao.getActivityTypes().stream()
@@ -65,10 +63,10 @@ data class ActivityInstance(
     var startTime: LocalDateTime = clock.now(),
     var endTime: LocalDateTime? = null
 ) {
-    val duration by lazy {
+    fun getDuration(): String {
         val end = endTime ?: clock.now()
         val difference = Duration.between(startTime, end).toMillis()
-        String.format(
+        return String.format(
             "%02d:%02d.%02d",
             java.util.concurrent.TimeUnit.MILLISECONDS.toHours(difference),
             java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(difference) -

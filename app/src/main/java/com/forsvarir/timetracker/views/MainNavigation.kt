@@ -80,7 +80,7 @@ fun MainNavigation(
 }
 
 @Composable
-fun BottomInfoBar(currentActivity: ActivityInstance) {
+fun BottomInfoBar(currentActivity: ActivityInstance, tick: Int?) {
     val runningActivityDescription = stringResource(R.string.RunningActivityProgress)
     BottomAppBar {
         Column(
@@ -89,7 +89,7 @@ fun BottomInfoBar(currentActivity: ActivityInstance) {
         ) {
             if (currentActivity.name != "Unknown") {
                 Text(
-                    text = "${currentActivity.name} ${currentActivity.duration}",
+                    text = "${currentActivity.name} ${currentActivity.getDuration()}",
                     modifier = Modifier.semantics {
                         contentDescription = runningActivityDescription
                     })

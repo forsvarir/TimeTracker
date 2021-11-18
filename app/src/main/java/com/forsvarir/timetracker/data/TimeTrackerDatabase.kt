@@ -1,6 +1,5 @@
 package com.forsvarir.timetracker.data
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -22,10 +21,6 @@ class TrackerDbOpen(
     private val scope: CoroutineScope,
     private val timeTrackerDatabase: () -> TimeTrackerDatabase
 ) : RoomDatabase.Callback() {
-    override fun onCreate(db: SupportSQLiteDatabase) {
-        super.onCreate(db)
-        Log.println(Log.ERROR, "ready", "Create - Starting")
-    }
 
     override fun onOpen(db: SupportSQLiteDatabase) {
         super.onOpen(db)

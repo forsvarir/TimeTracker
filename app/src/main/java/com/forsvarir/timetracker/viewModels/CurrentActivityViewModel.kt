@@ -24,6 +24,13 @@ class CurrentActivityViewModel(
         MutableLiveData(ActivityConstants.Unknown)
     val currentActivity: LiveData<ActivityInstance> = mutableCurrentActivity
 
+    private val mutableTick = MutableLiveData(0)
+    val tick = mutableTick
+
+    fun incrementTick() {
+        mutableTick.postValue(mutableTick.value!! + 1)
+    }
+
     fun startActivity(newActivity: String) {
         val activityChangeTime = clock.now()
         if (newActivity == currentActivity.value?.name) {

@@ -17,7 +17,7 @@ class ActivityInstanceTest {
                 .plusSeconds(52)
         )
 
-        assertThat(instance.duration).isEqualTo("12:34.52")
+        assertThat(instance.getDuration()).isEqualTo("12:34.52")
     }
 
     @Test
@@ -32,7 +32,7 @@ class ActivityInstanceTest {
                 .plusSeconds(25)
 
 
-        assertThat(instance.duration).isEqualTo("23:24.25")
+        assertThat(instance.getDuration()).isEqualTo("23:24.25")
     }
 
 }

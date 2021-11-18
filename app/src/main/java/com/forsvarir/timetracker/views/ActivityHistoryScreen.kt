@@ -37,7 +37,7 @@ fun ActivityHistoryView(events: List<ActivityInstance>) {
             )
         }
         events.forEach {
-            EventRow(it.name, it.duration)
+            EventRow(it.name, it.getDuration())
         }
     }
 }

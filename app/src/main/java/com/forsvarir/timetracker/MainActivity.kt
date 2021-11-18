@@ -1,6 +1,8 @@
 package com.forsvarir.timetracker
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
@@ -27,11 +29,32 @@ import java.time.LocalDateTime
 class MainActivity : ComponentActivity() {
     private val currentActivityViewModel: CurrentActivityViewModel by viewModel()
 
+    lateinit var mainHandler: Handler
+
+    private val heartbeat = object : Runnable {
+        override fun run() {
+            currentActivityViewModel.incrementTick()
+            mainHandler.postDelayed(this, 1000)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MainActivityView(currentActivityViewModel)
         }
+
+        mainHandler = Handler(Looper.getMainLooper())
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mainHandler.removeCallbacks(heartbeat)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mainHandler.post(heartbeat)
     }
 }
 
@@ -40,11 +63,12 @@ fun MainActivityView(viewModel: CurrentActivityViewModel) {
     val navController = rememberNavController()
     var title by remember { mutableStateOf("") }
     val activity by viewModel.currentActivity.observeAsState()
+    val tick by viewModel.tick.observeAsState()
 
     TimeTrackerTheme {
         Scaffold(topBar = {
             TopNavBar(navController, title)
-        }, bottomBar = { BottomInfoBar(activity!!) }) { innerPadding ->
+        }, bottomBar = { BottomInfoBar(activity!!, tick) }) { innerPadding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.padding(innerPadding)
