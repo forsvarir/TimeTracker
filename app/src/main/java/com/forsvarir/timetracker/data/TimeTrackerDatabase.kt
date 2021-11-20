@@ -1,9 +1,11 @@
 package com.forsvarir.timetracker.data
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.forsvarir.timetracker.R
 import com.forsvarir.timetracker.data.entities.ActivityType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +21,7 @@ abstract class TimeTrackerDatabase : RoomDatabase() {
 
 class TrackerDbOpen(
     private val scope: CoroutineScope,
+    private val context: Context,
     private val timeTrackerDatabase: () -> TimeTrackerDatabase
 ) : RoomDatabase.Callback() {
 
@@ -35,11 +38,9 @@ class TrackerDbOpen(
         scope.launch {
             withContext(Dispatchers.IO) {
                 if (dbs.timeTrackerDao.countActivityTypes() == 0) {
-                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Unknown"))
-                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Travelling"))
-                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Working"))
-                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Sleeping"))
-                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Programming"))
+                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = context.getString(R.string.ActivityIdle)))
+                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = context.getString(R.string.ActivityTravelling)))
+                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = context.getString(R.string.ActivitySleeping)))
                 }
                 dbs.isOpen.postValue(true)
             }

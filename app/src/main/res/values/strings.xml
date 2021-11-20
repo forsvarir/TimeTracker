@@ -7,4 +7,7 @@
     <string name="NavigateToPreviousActivities">Navigate to previous activities</string>
     <string name="CurrentRunningActivity">Current Running Activity</string>
     <string name="RunningActivityProgress">Running Activity Progress</string>
+    <string name="ActivitySleeping">Sleeping</string>
+    <string name="ActivityIdle">Idle</string>
+    <string name="ActivityTravelling">Travelling</string>
 </resources>

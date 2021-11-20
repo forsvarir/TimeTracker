@@ -2,7 +2,6 @@ package com.forsvarir.timetracker
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.forsvarir.timetracker.data.ActivityConstants
 import com.forsvarir.timetracker.data.TimeTrackerRepository
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 import com.forsvarir.timetracker.viewModels.LocalTimeFactory
@@ -22,7 +21,8 @@ class CurrentActivityTests {
         val viewModel =
             CurrentActivityViewModel(
                 StubbedTimeTrackerRepository(possibleActivities),
-                ProgrammableTimeFactory()
+                ProgrammableTimeFactory(),
+                "Idle"
             )
 
         assertThat(viewModel.availableActivities().value).containsExactly(
@@ -37,10 +37,11 @@ class CurrentActivityTests {
         val possibleActivities = listOf("Programming", "Walking", "Sleeping")
         val model = CurrentActivityViewModel(
             StubbedTimeTrackerRepository(possibleActivities),
-            LocalTimeFactory()
+            LocalTimeFactory(),
+            "Idle"
         )
 
-        assertThat(model.currentActivity.value).isEqualTo(ActivityConstants.Unknown)
+        assertThat(model.currentActivity.value!!.name).isEqualTo("Idle")
         assertThat(model.previousActivities.value).isEmpty()
     }
 
@@ -49,7 +50,11 @@ class CurrentActivityTests {
         val possibleActivities = listOf("Programming", "Walking", "Sleeping")
         val clock = ProgrammableTimeFactory()
         val model =
-            CurrentActivityViewModel(StubbedTimeTrackerRepository(possibleActivities), clock)
+            CurrentActivityViewModel(
+                StubbedTimeTrackerRepository(possibleActivities),
+                clock,
+                "Idle"
+            )
 
         model.startActivity("Programming")
 
@@ -69,7 +74,11 @@ class CurrentActivityTests {
         val secondActivityStartTime = initialActivityStartTime.plusHours(1)
         val clock = ProgrammableTimeFactory(initialActivityStartTime)
         val model =
-            CurrentActivityViewModel(StubbedTimeTrackerRepository(possibleActivities), clock)
+            CurrentActivityViewModel(
+                StubbedTimeTrackerRepository(possibleActivities),
+                clock,
+                "Idle"
+            )
 
         model.startActivity("Programming")
 
@@ -98,7 +107,11 @@ class CurrentActivityTests {
         val secondActivityStartTime = initialActivityStartTime.plusHours(1)
         val clock = ProgrammableTimeFactory(initialActivityStartTime)
         val model =
-            CurrentActivityViewModel(StubbedTimeTrackerRepository(possibleActivities), clock)
+            CurrentActivityViewModel(
+                StubbedTimeTrackerRepository(possibleActivities),
+                clock,
+                "Idle"
+            )
 
         model.startActivity("Programming")
         clock.setNow(secondActivityStartTime)

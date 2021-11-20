@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.compose.rememberNavController
+import com.forsvarir.timetracker.app.TimeTrackerApplication
 import com.forsvarir.timetracker.data.TimeTrackerRepository
 import com.forsvarir.timetracker.ui.theme.TimeTrackerTheme
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
@@ -40,7 +41,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainActivityView(currentActivityViewModel)
+            MainActivityView(
+                currentActivityViewModel,
+                TimeTrackerApplication.getContext().applicationContext.getString(R.string.ActivityIdle)
+            )
         }
 
         mainHandler = Handler(Looper.getMainLooper())
@@ -58,7 +62,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainActivityView(viewModel: CurrentActivityViewModel) {
+fun MainActivityView(viewModel: CurrentActivityViewModel, idleActivityName: String) {
     val navController = rememberNavController()
     var title by remember { mutableStateOf("") }
     val activity by viewModel.currentActivity.observeAsState()
@@ -67,7 +71,7 @@ fun MainActivityView(viewModel: CurrentActivityViewModel) {
     TimeTrackerTheme {
         Scaffold(topBar = {
             TopNavBar(navController, title)
-        }, bottomBar = { BottomInfoBar(activity!!, tick) }) { innerPadding ->
+        }, bottomBar = { BottomInfoBar(activity!!, idleActivityName, tick) }) { innerPadding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.padding(innerPadding)
@@ -84,7 +88,6 @@ fun MainActivityView(viewModel: CurrentActivityViewModel) {
 @Composable
 private fun PreviewMainActivityView() {
     val availableActivityNames = listOf("Walking", "Programming", "Sleeping", "Travelling")
-
     val stubbedRepository = object : TimeTrackerRepository {
         override fun ready(): LiveData<Boolean> {
             return MutableLiveData(true)
@@ -95,10 +98,10 @@ private fun PreviewMainActivityView() {
         }
     }
     val currentTime = ProgrammableTimeFactory()
-    val viewModel = CurrentActivityViewModel(stubbedRepository, ProgrammableTimeFactory())
+    val viewModel = CurrentActivityViewModel(stubbedRepository, ProgrammableTimeFactory(), "Idle")
     viewModel.startActivity("Programming")
     currentTime.setNow(currentTime.now().plusDays(2).plusHours(3).plusSeconds(44))
-    MainActivityView(viewModel = viewModel)
+    MainActivityView(viewModel = viewModel, "Unknown")
 }
 
 private class ProgrammableTimeFactory(initialTime: LocalDateTime = LocalDateTime.now()) :

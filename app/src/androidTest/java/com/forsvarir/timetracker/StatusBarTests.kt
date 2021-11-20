@@ -1,5 +1,6 @@
 package com.forsvarir.timetracker
 
+import android.content.Context
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.LiveData
@@ -18,11 +19,15 @@ import org.koin.dsl.module
 import java.time.LocalDateTime
 
 class StatusBarTests {
+    private val context: Context = get().get()
     private val defaultTimeFactory: TimeFactory = get().get()
     private val programmableTimeFactory: ProgrammableTimeFactory = ProgrammableTimeFactory()
     private val defaultRepository: TimeTrackerRepository = get().get()
+    private val idleActivityName = context.getString(R.string.ActivityIdle)
+    private val travellingActivityName = context.getString(R.string.ActivityTravelling)
     private val stubbedTimeTrackerRepository: StubbedTimeTrackerRepository =
-        StubbedTimeTrackerRepository(listOf("Unknown", "Travelling"))
+        StubbedTimeTrackerRepository(listOf(idleActivityName, travellingActivityName))
+
 
     @get:Rule
     val mainActivityRule = createAndroidComposeRule<MainActivity>()
@@ -40,7 +45,7 @@ class StatusBarTests {
     @Test
     fun currentRunningActivityNotDisplayedInStatusBarWhenUnknown() {
         launchCurrentActivityScreen(mainActivityRule) {
-            setCurrentActivity("Unknown")
+            setCurrentActivity(idleActivityName)
         } verify {
             noCurrentRunningActivityDisplayed()
         }
@@ -49,9 +54,9 @@ class StatusBarTests {
     @Test
     fun currentRunningActivityAndDurationIsDisplayedInStatusBar() {
         launchCurrentActivityScreen(mainActivityRule) {
-            setCurrentActivity("Travelling")
+            setCurrentActivity(travellingActivityName)
         } verify {
-            currentRunningActivityIs("Travelling", "00:00.00")
+            currentRunningActivityIs(travellingActivityName, "00:00.00")
         }
     }
 
@@ -59,12 +64,12 @@ class StatusBarTests {
     fun currentRunningActivityAndDurationReflectsElapsedTimeInStatusBar() {
         launchCurrentActivityScreen(mainActivityRule) {
             val activityStartTime = programmableTimeFactory.now()
-            setCurrentActivity("Travelling")
+            setCurrentActivity(travellingActivityName)
             programmableTimeFactory.setNow(
                 activityStartTime.plusHours(1).plusMinutes(23).plusSeconds(45)
             )
         } verify {
-            currentRunningActivityIs("Travelling", "01:23.45")
+            currentRunningActivityIs(travellingActivityName, "01:23.45")
         }
     }
 
@@ -72,22 +77,22 @@ class StatusBarTests {
     fun currentRunningActivityAndDurationReflectsElapsedTimeAfterTicksInStatusBar() {
         launchCurrentActivityScreen(mainActivityRule) {
             val activityStartTime = programmableTimeFactory.now()
-            setCurrentActivity("Travelling")
+            setCurrentActivity(travellingActivityName)
             programmableTimeFactory.setNow(
                 activityStartTime.plusHours(1).plusMinutes(23).plusSeconds(45)
             )
             programmableTimeFactory.setNow(programmableTimeFactory.now().plusSeconds(10))
         } verify {
-            currentRunningActivityIs("Travelling", "01:23.55")
+            currentRunningActivityIs(travellingActivityName, "01:23.55")
         }
     }
 
     @Test
     fun currentRunningActivityIsVisibleOnPreviousActivityHistory() {
         launchCurrentActivityScreen(mainActivityRule) {
-            setCurrentActivity("Travelling")
+            setCurrentActivity(travellingActivityName)
         } verify {
-            currentRunningActivityIs("Travelling", "00:00.00")
+            currentRunningActivityIs(travellingActivityName, "00:00.00")
         }
     }
 

@@ -84,9 +84,3 @@ data class ActivityInstance(
         )
     }
 }
-
-class ActivityConstants {
-    companion object {
-        val Unknown = ActivityInstance("Unknown")
-    }
-}

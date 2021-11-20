@@ -55,7 +55,7 @@ fun TopNavBar(navController: NavController, title: String) {
 @Composable
 fun MainNavigation(
     navController: NavHostController,
-    viewModel : CurrentActivityViewModel,
+    viewModel: CurrentActivityViewModel,
     newTitle: (String) -> Unit = {}
 ) {
     NavHost(
@@ -80,14 +80,14 @@ fun MainNavigation(
 }
 
 @Composable
-fun BottomInfoBar(currentActivity: ActivityInstance, tick: Int?) {
+fun BottomInfoBar(currentActivity: ActivityInstance, idleActivityName: String, tick: Int?) {
     val runningActivityDescription = stringResource(R.string.RunningActivityProgress)
     BottomAppBar {
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (currentActivity.name != "Unknown") {
+            if (currentActivity.name != idleActivityName) {
                 Text(
                     text = "${currentActivity.name} ${currentActivity.getDuration()}",
                     modifier = Modifier.semantics {

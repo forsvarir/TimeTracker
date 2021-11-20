@@ -3,6 +3,7 @@ package com.forsvarir.timetracker.app
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.forsvarir.timetracker.R
 import com.forsvarir.timetracker.data.*
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 import com.forsvarir.timetracker.viewModels.LocalTimeFactory
@@ -31,14 +32,16 @@ class TimeTrackerApplication : Application() {
 }
 
 val applicationModule = module {
+    single { TimeTrackerApplication.getContext().applicationContext }
     single {
         Room.databaseBuilder(
-            (TimeTrackerApplication.getContext()).applicationContext,
+            get(),
             TimeTrackerDatabase::class.java,
             "time_tracker_database"
         ).addCallback(
             TrackerDbOpen(
-                MainScope()
+                MainScope(),
+                get()
             ) { get() }
         ).fallbackToDestructiveMigration()
             .build()
@@ -55,7 +58,8 @@ val applicationModule = module {
     viewModel {
         CurrentActivityViewModel(
             timeTrackerRepository = get(),
-            clock = get()
+            clock = get(),
+            get<Context>().getString(R.string.ActivityIdle)
         )
     }
 }
