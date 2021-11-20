@@ -28,7 +28,6 @@ import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
     private val currentActivityViewModel: CurrentActivityViewModel by viewModel()
-
     lateinit var mainHandler: Handler
 
     private val heartbeat = object : Runnable {

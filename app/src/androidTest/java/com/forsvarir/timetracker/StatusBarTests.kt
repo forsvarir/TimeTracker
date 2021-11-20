@@ -69,6 +69,20 @@ class StatusBarTests {
     }
 
     @Test
+    fun currentRunningActivityAndDurationReflectsElapsedTimeAfterTicksInStatusBar() {
+        launchCurrentActivityScreen(mainActivityRule) {
+            val activityStartTime = programmableTimeFactory.now()
+            setCurrentActivity("Travelling")
+            programmableTimeFactory.setNow(
+                activityStartTime.plusHours(1).plusMinutes(23).plusSeconds(45)
+            )
+            programmableTimeFactory.setNow(programmableTimeFactory.now().plusSeconds(10))
+        } verify {
+            currentRunningActivityIs("Travelling", "01:23.55")
+        }
+    }
+
+    @Test
     fun currentRunningActivityIsVisibleOnPreviousActivityHistory() {
         launchCurrentActivityScreen(mainActivityRule) {
             setCurrentActivity("Travelling")

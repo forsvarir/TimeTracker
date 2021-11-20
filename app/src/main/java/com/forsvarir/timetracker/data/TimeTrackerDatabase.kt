@@ -35,7 +35,7 @@ class TrackerDbOpen(
         scope.launch {
             withContext(Dispatchers.IO) {
                 if (dbs.timeTrackerDao.countActivityTypes() == 0) {
-
+                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Unknown"))
                     dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Travelling"))
                     dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Working"))
                     dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Sleeping"))

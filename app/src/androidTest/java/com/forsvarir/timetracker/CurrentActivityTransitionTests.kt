@@ -51,6 +51,20 @@ class CurrentActivityTransitionTests {
         }
     }
 
+    @Test
+    fun changingActivityThroughUnknownNotTrackedOnPreviousHistory() {
+        launchCurrentActivityScreen(mainActivityRule) {
+            navigateToCurrentActivityScreen()
+            setCurrentActivity("Unknown")
+            setCurrentActivity("Programming")
+
+            navigateToActivityHistoryScreen()
+        } verify {
+            mainActivityRule.onAllNodesWithText("Unknown")
+                .assertCountEquals(0)
+        }
+    }
+
     private fun launchCurrentActivityScreen(
         rule: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>,
         block: CurrentActivityScreenController.() -> Unit
