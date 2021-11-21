@@ -3,8 +3,8 @@ package com.forsvarir.timetracker.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.forsvarir.timetracker.data.ActivityInstance
 import com.forsvarir.timetracker.data.TimeTrackerRepository
+import com.forsvarir.timetracker.data.entities.ActivityInstance
 import java.time.LocalDateTime
 import java.util.*
 
@@ -21,7 +21,7 @@ class CurrentActivityViewModel(
     val previousActivities: LiveData<MutableList<ActivityInstance>> = mutablePreviousActivities
 
     private val mutableCurrentActivity =
-        MutableLiveData(ActivityInstance(idleActivityName))
+        MutableLiveData(ActivityInstance(name = idleActivityName))
     val currentActivity: LiveData<ActivityInstance> = mutableCurrentActivity
 
     private val mutableTick = MutableLiveData(0)
@@ -43,9 +43,9 @@ class CurrentActivityViewModel(
         }
 
         mutableCurrentActivity.value = ActivityInstance(
-            newActivity,
-            clock,
-            activityChangeTime
+            name = newActivity,
+            clock = clock,
+            startTime = activityChangeTime
         )
     }
 }

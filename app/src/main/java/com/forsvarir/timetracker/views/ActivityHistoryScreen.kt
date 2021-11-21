@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.forsvarir.timetracker.data.ActivityInstance
+import com.forsvarir.timetracker.data.entities.ActivityInstance
 import com.forsvarir.timetracker.ui.theme.TimeTrackerTheme
 
 @Preview(widthDp = 480, heightDp = 800)
@@ -60,9 +60,9 @@ private fun EventRow(activity: String, duration: String) {
 
 private fun stubbedEvents(): List<ActivityInstance> {
     return listOf(
-        ActivityInstance("Programming"),
-        ActivityInstance("Walking"),
-        ActivityInstance("Programming"),
-        ActivityInstance("Eating")
+        ActivityInstance(name = "Programming"),
+        ActivityInstance(name = "Walking"),
+        ActivityInstance(name = "Programming"),
+        ActivityInstance(name = "Eating")
     )
 }

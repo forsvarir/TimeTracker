@@ -19,7 +19,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.forsvarir.timetracker.R
-import com.forsvarir.timetracker.data.ActivityInstance
+import com.forsvarir.timetracker.data.entities.ActivityInstance
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 
 class NavigationHooks {
