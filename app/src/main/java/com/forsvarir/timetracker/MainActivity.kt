@@ -18,6 +18,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.compose.rememberNavController
 import com.forsvarir.timetracker.app.TimeTrackerApplication
 import com.forsvarir.timetracker.data.TimeTrackerRepository
+import com.forsvarir.timetracker.data.entities.ActivityInstance
 import com.forsvarir.timetracker.ui.theme.TimeTrackerTheme
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 import com.forsvarir.timetracker.viewModels.TimeFactory
@@ -91,6 +92,14 @@ private fun PreviewMainActivityView() {
     val stubbedRepository = object : TimeTrackerRepository {
         override fun ready(): LiveData<Boolean> {
             return MutableLiveData(true)
+        }
+
+        override suspend fun save(activityInstance: ActivityInstance) {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
+            TODO("Not yet implemented")
         }
 
         override fun availableActivities(): LiveData<List<String>> {

@@ -3,6 +3,7 @@ package com.forsvarir.timetracker
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.forsvarir.timetracker.data.TimeTrackerRepository
+import com.forsvarir.timetracker.data.entities.ActivityInstance
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 import com.forsvarir.timetracker.viewModels.LocalTimeFactory
 import com.forsvarir.timetracker.viewModels.TimeFactory
@@ -146,6 +147,14 @@ class CurrentActivityTests {
 
         override fun ready(): LiveData<Boolean> {
             return MutableLiveData(true)
+        }
+
+        override suspend fun save(activityInstance: ActivityInstance) {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
+            TODO("Not yet implemented")
         }
 
     }

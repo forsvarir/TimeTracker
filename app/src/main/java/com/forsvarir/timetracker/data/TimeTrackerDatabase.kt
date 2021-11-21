@@ -4,15 +4,22 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.forsvarir.timetracker.R
+import com.forsvarir.timetracker.data.entities.ActivityInstance
 import com.forsvarir.timetracker.data.entities.ActivityType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@Database(entities = [ActivityType::class], version = 1, exportSchema = false)
+@Database(
+    entities = [ActivityType::class, ActivityInstance::class],
+    version = 1,
+    exportSchema = false
+)
+@TypeConverters(LocalDateTimeConverter::class)
 abstract class TimeTrackerDatabase : RoomDatabase() {
     val isOpen: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 

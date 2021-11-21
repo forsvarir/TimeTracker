@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.forsvarir.timetracker.control.CurrentActivityScreenController
 import com.forsvarir.timetracker.data.TimeTrackerRepository
+import com.forsvarir.timetracker.data.entities.ActivityInstance
 import com.forsvarir.timetracker.viewModels.TimeFactory
 import org.junit.After
 import org.junit.Before
@@ -135,6 +136,14 @@ class StatusBarTests {
 
         override fun ready(): LiveData<Boolean> {
             return MutableLiveData(true)
+        }
+
+        override suspend fun save(activityInstance: ActivityInstance) {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
+            TODO("Not yet implemented")
         }
 
     }
