@@ -18,6 +18,8 @@ import org.koin.core.context.GlobalContext.get
 import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
 import java.time.LocalDateTime
+import java.util.stream.Collectors
+import java.util.stream.Stream
 
 class StatusBarTests {
     private val context: Context = get().get()
@@ -130,6 +132,9 @@ class StatusBarTests {
 
     private class StubbedTimeTrackerRepository(private val availableActivities: List<String> = emptyList()) :
         TimeTrackerRepository {
+        val previousActivities: MutableLiveData<List<ActivityInstance>> =
+            MutableLiveData(emptyList())
+
         override fun availableActivities(): LiveData<List<String>> {
             return MutableLiveData(availableActivities)
         }
@@ -138,12 +143,18 @@ class StatusBarTests {
             return MutableLiveData(true)
         }
 
-        override suspend fun save(activityInstance: ActivityInstance) {
-            TODO("Not yet implemented")
+        override fun save(activityInstance: ActivityInstance) {
+            previousActivities.postValue(
+                Stream.concat(
+                    previousActivities.value!!.stream(),
+                    listOf(activityInstance).stream()
+                )
+                    .collect(Collectors.toList())
+            )
         }
 
-        override suspend fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
-            TODO("Not yet implemented")
+        override fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
+            return previousActivities
         }
 
     }

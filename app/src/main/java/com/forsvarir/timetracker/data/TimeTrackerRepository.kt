@@ -13,8 +13,8 @@ import kotlin.streams.toList
 interface TimeTrackerRepository {
     fun availableActivities(): LiveData<List<String>>
     fun ready(): LiveData<Boolean>
-    suspend fun save(activityInstance: ActivityInstance)
-    suspend fun allPreviousActivities(): LiveData<List<ActivityInstance>>
+    fun save(activityInstance: ActivityInstance)
+    fun allPreviousActivities(): LiveData<List<ActivityInstance>>
 }
 
 class TimeTrackerRepositoryImpl(
@@ -41,7 +41,7 @@ class TimeTrackerRepositoryImpl(
         return activityTypes
     }
 
-    override suspend fun save(activityInstance: ActivityInstance) {
+    override fun save(activityInstance: ActivityInstance) {
         dataAccessScope.launch {
             withContext(Dispatchers.IO) {
                 if (activityInstance.activityInstanceId == 0L) {
@@ -50,11 +50,12 @@ class TimeTrackerRepositoryImpl(
                 } else {
                     database.timeTrackerDao.updateActivityInstance(activityInstance)
                 }
+                allPreviousActivities()
             }
         }
     }
 
-    override suspend fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
+    override fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
         dataAccessScope.launch {
             withContext(Dispatchers.IO) {
                 mutablePreviousActivities.postValue(database.timeTrackerDao.getPreviousActivityInstances())

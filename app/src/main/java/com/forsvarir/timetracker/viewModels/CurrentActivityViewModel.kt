@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.forsvarir.timetracker.data.TimeTrackerRepository
 import com.forsvarir.timetracker.data.entities.ActivityInstance
 import java.time.LocalDateTime
-import java.util.*
 
 class CurrentActivityViewModel(
     private val timeTrackerRepository: TimeTrackerRepository,
@@ -16,9 +15,8 @@ class CurrentActivityViewModel(
 
     fun availableActivities() = timeTrackerRepository.availableActivities()
 
-    private val mutablePreviousActivities =
-        MutableLiveData<MutableList<ActivityInstance>>(LinkedList())
-    val previousActivities: LiveData<MutableList<ActivityInstance>> = mutablePreviousActivities
+    val previousActivities: LiveData<List<ActivityInstance>> =
+        timeTrackerRepository.allPreviousActivities()
 
     private val mutableCurrentActivity =
         MutableLiveData(ActivityInstance(name = idleActivityName))
@@ -39,7 +37,8 @@ class CurrentActivityViewModel(
 
         if (currentActivity.value?.name != idleActivityName) {
             currentActivity.value?.endTime = activityChangeTime
-            previousActivities.value?.add(currentActivity.value!!)
+            timeTrackerRepository.save(currentActivity.value!!)
+//            previousActivities.value?.add(currentActivity.value!!)
         }
 
         mutableCurrentActivity.value = ActivityInstance(

@@ -11,6 +11,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
+import java.util.stream.Collectors
+import java.util.stream.Stream.concat
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CurrentActivityTests {
@@ -141,6 +143,9 @@ class CurrentActivityTests {
 
     class StubbedTimeTrackerRepository(private val availableActivities: List<String> = emptyList()) :
         TimeTrackerRepository {
+        val previousActivities: MutableLiveData<List<ActivityInstance>> =
+            MutableLiveData(emptyList())
+
         override fun availableActivities(): LiveData<List<String>> {
             return MutableLiveData(availableActivities)
         }
@@ -149,12 +154,18 @@ class CurrentActivityTests {
             return MutableLiveData(true)
         }
 
-        override suspend fun save(activityInstance: ActivityInstance) {
-            TODO("Not yet implemented")
+        override fun save(activityInstance: ActivityInstance) {
+            previousActivities.postValue(
+                concat(
+                    previousActivities.value!!.stream(),
+                    listOf(activityInstance).stream()
+                )
+                    .collect(Collectors.toList())
+            )
         }
 
-        override suspend fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
-            TODO("Not yet implemented")
+        override fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
+            return previousActivities
         }
 
     }

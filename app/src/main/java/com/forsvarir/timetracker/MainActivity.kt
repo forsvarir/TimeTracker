@@ -94,11 +94,11 @@ private fun PreviewMainActivityView() {
             return MutableLiveData(true)
         }
 
-        override suspend fun save(activityInstance: ActivityInstance) {
+        override fun save(activityInstance: ActivityInstance) {
             TODO("Not yet implemented")
         }
 
-        override suspend fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
+        override fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
             TODO("Not yet implemented")
         }
 
