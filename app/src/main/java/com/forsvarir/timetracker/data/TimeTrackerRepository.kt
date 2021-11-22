@@ -30,6 +30,7 @@ class TimeTrackerRepositoryImpl(
 
     init {
         loadActivityTypes()
+        loadPreviousActivities()
     }
 
     override fun ready(): LiveData<Boolean> = databaseReady
@@ -56,7 +57,6 @@ class TimeTrackerRepositoryImpl(
     }
 
     override fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
-        loadPreviousActivities()
         return previousActivities
     }
 
