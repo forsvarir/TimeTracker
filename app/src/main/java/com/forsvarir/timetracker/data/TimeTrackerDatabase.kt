@@ -48,6 +48,9 @@ class TrackerDbOpen(
                     dbs.timeTrackerDao.insertActivityType(ActivityType(name = context.getString(R.string.ActivityIdle)))
                     dbs.timeTrackerDao.insertActivityType(ActivityType(name = context.getString(R.string.ActivityTravelling)))
                     dbs.timeTrackerDao.insertActivityType(ActivityType(name = context.getString(R.string.ActivitySleeping)))
+                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Programming"))
+                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Project"))
+                    dbs.timeTrackerDao.insertActivityType(ActivityType(name = "Chores"))
                 }
                 dbs.isOpen.postValue(true)
             }
