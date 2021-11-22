@@ -38,7 +38,6 @@ class CurrentActivityViewModel(
         if (currentActivity.value?.name != idleActivityName) {
             currentActivity.value?.endTime = activityChangeTime
             timeTrackerRepository.save(currentActivity.value!!)
-//            previousActivities.value?.add(currentActivity.value!!)
         }
 
         mutableCurrentActivity.value = ActivityInstance(

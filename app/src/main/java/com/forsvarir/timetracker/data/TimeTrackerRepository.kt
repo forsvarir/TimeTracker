@@ -29,14 +29,14 @@ class TimeTrackerRepositoryImpl(
     private val databaseReady: LiveData<Boolean> = database.isOpen
 
     init {
-        loadActivities()
+        loadActivityTypes()
     }
 
     override fun ready(): LiveData<Boolean> = databaseReady
 
     override fun availableActivities(): LiveData<List<String>> {
         if (databaseReady.value!! && mutableActivityTypes.value?.size ?: 0 <= 0) {
-            loadActivities()
+            loadActivityTypes()
         }
         return activityTypes
     }
@@ -50,22 +50,26 @@ class TimeTrackerRepositoryImpl(
                 } else {
                     database.timeTrackerDao.updateActivityInstance(activityInstance)
                 }
-                allPreviousActivities()
+                loadPreviousActivities()
             }
         }
     }
 
     override fun allPreviousActivities(): LiveData<List<ActivityInstance>> {
+        loadPreviousActivities()
+        return previousActivities
+    }
+
+    private fun loadPreviousActivities() {
         dataAccessScope.launch {
             withContext(Dispatchers.IO) {
                 mutablePreviousActivities.postValue(database.timeTrackerDao.getPreviousActivityInstances())
             }
         }
-        return previousActivities
     }
 
 
-    private fun loadActivities() {
+    private fun loadActivityTypes() {
         dataAccessScope.launch {
             withContext(Dispatchers.IO) {
                 val activities = database.timeTrackerDao.getActivityTypes().stream()
