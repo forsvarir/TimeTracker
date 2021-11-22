@@ -51,7 +51,8 @@ val applicationModule = module {
     factory<TimeTrackerRepository> {
         TimeTrackerRepositoryImpl(
             database = get(),
-            dataAccessScope = get()
+            dataAccessScope = get(),
+            get<Context>().getString(R.string.ActivityIdle)
         )
     }
 

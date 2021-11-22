@@ -18,9 +18,7 @@ class CurrentActivityViewModel(
     val previousActivities: LiveData<List<ActivityInstance>> =
         timeTrackerRepository.allPreviousActivities()
 
-    private val mutableCurrentActivity =
-        MutableLiveData(ActivityInstance(name = idleActivityName))
-    val currentActivity: LiveData<ActivityInstance> = mutableCurrentActivity
+    val currentActivity: LiveData<ActivityInstance> = timeTrackerRepository.currentActivity()
 
     private val mutableTick = MutableLiveData(0)
     val tick = mutableTick
@@ -40,10 +38,12 @@ class CurrentActivityViewModel(
             timeTrackerRepository.save(currentActivity.value!!)
         }
 
-        mutableCurrentActivity.value = ActivityInstance(
-            name = newActivity,
-            clock = clock,
-            startTime = activityChangeTime
+        timeTrackerRepository.save(
+            ActivityInstance(
+                name = newActivity,
+                clock = clock,
+                startTime = activityChangeTime
+            )
         )
     }
 }

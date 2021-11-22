@@ -134,9 +134,14 @@ class StatusBarTests {
         TimeTrackerRepository {
         val previousActivities: MutableLiveData<List<ActivityInstance>> =
             MutableLiveData(emptyList())
+        val currentActivity = MutableLiveData(ActivityInstance(name = "Idle"))
 
         override fun availableActivities(): LiveData<List<String>> {
             return MutableLiveData(availableActivities)
+        }
+
+        override fun currentActivity(): LiveData<ActivityInstance> {
+            return currentActivity
         }
 
         override fun ready(): LiveData<Boolean> {
@@ -144,13 +149,17 @@ class StatusBarTests {
         }
 
         override fun save(activityInstance: ActivityInstance) {
-            previousActivities.postValue(
-                Stream.concat(
-                    previousActivities.value!!.stream(),
-                    listOf(activityInstance).stream()
+            if (activityInstance.endTime == null) {
+                currentActivity.postValue(activityInstance)
+            } else {
+                previousActivities.postValue(
+                    Stream.concat(
+                        previousActivities.value!!.stream(),
+                        listOf(activityInstance).stream()
+                    )
+                        .collect(Collectors.toList())
                 )
-                    .collect(Collectors.toList())
-            )
+            }
         }
 
         override fun allPreviousActivities(): LiveData<List<ActivityInstance>> {

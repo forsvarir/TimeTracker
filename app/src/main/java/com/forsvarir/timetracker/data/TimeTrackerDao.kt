@@ -18,7 +18,7 @@ interface TimeTrackerDao {
     @Query("SELECT COUNT(1) FROM activity_type")
     fun countActivityTypes(): Int
 
-    @Query("SELECT * FROM activity_instance ORDER BY activity_instance_id DESC")
+    @Query("SELECT * FROM activity_instance WHERE end_time IS NOT NULL ORDER BY activity_instance_id DESC")
     suspend fun getPreviousActivityInstances(): List<ActivityInstance>
 
     @Insert
@@ -26,4 +26,7 @@ interface TimeTrackerDao {
 
     @Update
     suspend fun updateActivityInstance(instance: ActivityInstance)
+
+    @Query("SELECT * FROM activity_instance WHERE end_time IS NULL")
+    suspend fun getCurrentActivityInstance(): ActivityInstance?
 }

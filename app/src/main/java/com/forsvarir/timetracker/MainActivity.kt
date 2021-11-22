@@ -105,6 +105,10 @@ private fun PreviewMainActivityView() {
         override fun availableActivities(): LiveData<List<String>> {
             return MutableLiveData(availableActivityNames)
         }
+
+        override fun currentActivity(): LiveData<ActivityInstance> {
+            TODO("Not yet implemented")
+        }
     }
     val currentTime = ProgrammableTimeFactory()
     val viewModel = CurrentActivityViewModel(stubbedRepository, ProgrammableTimeFactory(), "Idle")
