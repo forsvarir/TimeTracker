@@ -12,6 +12,8 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -72,10 +74,15 @@ fun MainActivityView(viewModel: CurrentActivityViewModel, idleActivityName: Stri
     TimeTrackerTheme {
         Scaffold(topBar = {
             TopNavBar(navController, title)
-        }, bottomBar = { BottomInfoBar(activity!!, idleActivityName, tick) }) { innerPadding ->
+        },
+            bottomBar = { BottomInfoBar(activity!!, idleActivityName, tick) },
+            modifier = Modifier
+                .semantics { contentDescription = "Time Tracker Application" }) { innerPadding ->
             Surface(
                 color = MaterialTheme.colors.background,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .semantics { contentDescription = "Info Panel" }
             ) {
                 MainNavigation(navController, viewModel) {
                     title = it

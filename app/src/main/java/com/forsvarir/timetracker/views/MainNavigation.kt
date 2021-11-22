@@ -60,7 +60,9 @@ fun MainNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationHooks.CURRENT_ACTIVITY
+        startDestination = NavigationHooks.CURRENT_ACTIVITY,
+        modifier = Modifier
+            .semantics { contentDescription = "Navigation" }
     ) {
         composable(NavigationHooks.CURRENT_ACTIVITY) {
             newTitle(stringResource(R.string.TitleCurrentActivityScreen))
