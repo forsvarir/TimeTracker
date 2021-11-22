@@ -40,9 +40,10 @@ val applicationModule = module {
             "time_tracker_database"
         ).addCallback(
             TrackerDbOpen(
-                MainScope(),
-                get()
-            ) { get() }
+                scope = MainScope(),
+                context = get(),
+                timeTrackerDatabase = { get() }
+            )
         ).fallbackToDestructiveMigration()
             .build()
     }
@@ -52,7 +53,7 @@ val applicationModule = module {
         TimeTrackerRepositoryImpl(
             database = get(),
             dataAccessScope = get(),
-            get<Context>().getString(R.string.ActivityIdle)
+            idleActivityName = get<Context>().getString(R.string.ActivityIdle)
         )
     }
 
@@ -60,7 +61,7 @@ val applicationModule = module {
         CurrentActivityViewModel(
             timeTrackerRepository = get(),
             clock = get(),
-            get<Context>().getString(R.string.ActivityIdle)
+            idleActivityName = get<Context>().getString(R.string.ActivityIdle)
         )
     }
 }

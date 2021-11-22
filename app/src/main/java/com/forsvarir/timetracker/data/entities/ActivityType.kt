@@ -9,6 +9,7 @@ data class ActivityType(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "activity_type_id")
     var activityTypeId: Long = 0,
+
     @ColumnInfo(name = "name")
     var name: String
 )

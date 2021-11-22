@@ -143,9 +143,9 @@ class CurrentActivityTests {
 
     class StubbedTimeTrackerRepository(private val availableActivities: List<String> = emptyList()) :
         TimeTrackerRepository {
-        val previousActivities: MutableLiveData<List<ActivityInstance>> =
+        private val previousActivities: MutableLiveData<List<ActivityInstance>> =
             MutableLiveData(emptyList())
-        val currentActivity = MutableLiveData(ActivityInstance(name = "Idle"))
+        private val currentActivity = MutableLiveData(ActivityInstance(name = "Idle"))
 
         override fun availableActivities(): LiveData<List<String>> {
             return MutableLiveData(availableActivities)
