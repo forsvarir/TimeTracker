@@ -100,13 +100,20 @@ fun SelectCurrentActivity(
             onDismissRequest = { onSelected(currentItem) },
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.secondaryVariant)
+                .background(MaterialTheme.colors.secondary)
         ) {
             availableActivities.forEach { itemText ->
-                DropdownMenuItem(onClick = {
-                    onSelected(itemText)
-                }) {
-                    Text(itemText, color = MaterialTheme.colors.secondary)
+                val selectedModifier = Modifier.background(MaterialTheme.colors.secondaryVariant)
+                DropdownMenuItem(
+                    onClick = {
+                        onSelected(itemText)
+                    }, if (itemText == currentItem) {
+                        selectedModifier
+                    } else {
+                        Modifier
+                    }
+                ) {
+                    Text(itemText, color = MaterialTheme.colors.onSecondary)
                 }
             }
         }
