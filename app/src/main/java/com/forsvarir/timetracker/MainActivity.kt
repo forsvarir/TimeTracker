@@ -22,6 +22,7 @@ import com.forsvarir.timetracker.app.TimeTrackerApplication
 import com.forsvarir.timetracker.data.TimeTrackerRepository
 import com.forsvarir.timetracker.data.entities.ActivityInstance
 import com.forsvarir.timetracker.ui.theme.TimeTrackerTheme
+import com.forsvarir.timetracker.viewModels.ActivityHistoryViewModel
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 import com.forsvarir.timetracker.viewModels.TimeFactory
 import com.forsvarir.timetracker.views.BottomInfoBar
@@ -32,6 +33,7 @@ import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
     private val currentActivityViewModel: CurrentActivityViewModel by viewModel()
+    private val activityHistoryViewModel: ActivityHistoryViewModel by viewModel()
     lateinit var mainHandler: Handler
 
     private val heartbeat = object : Runnable {
@@ -46,7 +48,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             MainActivityView(
                 currentActivityViewModel,
-                TimeTrackerApplication.getContext().applicationContext.getString(R.string.ActivityIdle)
+                TimeTrackerApplication.getContext().applicationContext.getString(R.string.ActivityIdle),
+                activityHistoryViewModel
             )
         }
 
@@ -65,16 +68,21 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainActivityView(viewModel: CurrentActivityViewModel, idleActivityName: String) {
+fun MainActivityView(
+    viewModel: CurrentActivityViewModel,
+    idleActivityName: String,
+    activityHistoryViewModel: ActivityHistoryViewModel
+) {
     val navController = rememberNavController()
     var title by remember { mutableStateOf("") }
     val activity by viewModel.currentActivity.observeAsState()
     val tick by viewModel.tick.observeAsState()
 
     TimeTrackerTheme {
-        Scaffold(topBar = {
-            TopNavBar(navController, title)
-        },
+        Scaffold(
+            topBar = {
+                TopNavBar(navController, title)
+            },
             bottomBar = { BottomInfoBar(activity!!, idleActivityName, tick) },
             modifier = Modifier
                 .semantics { contentDescription = "Time Tracker Application" }) { innerPadding ->
@@ -84,7 +92,7 @@ fun MainActivityView(viewModel: CurrentActivityViewModel, idleActivityName: Stri
                     .padding(innerPadding)
                     .semantics { contentDescription = "Info Panel" }
             ) {
-                MainNavigation(navController, viewModel) {
+                MainNavigation(navController, viewModel, activityHistoryViewModel) {
                     title = it
                 }
             }
@@ -119,9 +127,10 @@ private fun PreviewMainActivityView() {
     }
     val currentTime = ProgrammableTimeFactory()
     val viewModel = CurrentActivityViewModel(stubbedRepository, ProgrammableTimeFactory(), "Idle")
+    val activityHistoryViewModel = ActivityHistoryViewModel(stubbedRepository)
     viewModel.startActivity("Programming")
     currentTime.setNow(currentTime.now().plusDays(2).plusHours(3).plusSeconds(44))
-    MainActivityView(viewModel = viewModel, "Unknown")
+    MainActivityView(viewModel = viewModel, "Unknown", activityHistoryViewModel)
 }
 
 private class ProgrammableTimeFactory(initialTime: LocalDateTime = LocalDateTime.now()) :

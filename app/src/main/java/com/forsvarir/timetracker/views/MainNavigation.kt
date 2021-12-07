@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.forsvarir.timetracker.R
 import com.forsvarir.timetracker.data.entities.ActivityInstance
+import com.forsvarir.timetracker.viewModels.ActivityHistoryViewModel
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 
 class NavigationHooks {
@@ -55,7 +56,8 @@ fun TopNavBar(navController: NavController, title: String) {
 @Composable
 fun MainNavigation(
     navController: NavHostController,
-    viewModel: CurrentActivityViewModel,
+    currentActivityViewModel: CurrentActivityViewModel,
+    activityHistoryViewModel: ActivityHistoryViewModel,
     newTitle: (String) -> Unit = {}
 ) {
     NavHost(
@@ -66,17 +68,17 @@ fun MainNavigation(
     ) {
         composable(NavigationHooks.CURRENT_ACTIVITY) {
             newTitle(stringResource(R.string.TitleCurrentActivityScreen))
-            val currentActivity by viewModel.currentActivity.observeAsState()
+            val currentActivity by currentActivityViewModel.currentActivity.observeAsState()
             CurrentActivityView(
                 currentActivity?.name ?: "",
-                viewModel.availableActivities(),
+                currentActivityViewModel.availableActivities(),
             ) {
-                viewModel.startActivity(it)
+                currentActivityViewModel.startActivity(it)
             }
         }
         composable(NavigationHooks.ACTIVITY_HISTORY) {
             newTitle(stringResource(R.string.TitlePreviousActivitiesScreen))
-            ActivityHistoryView(viewModel.previousActivities.value ?: emptyList())
+            ActivityHistoryView(activityHistoryViewModel.previousActivities.value ?: emptyList())
         }
     }
 }

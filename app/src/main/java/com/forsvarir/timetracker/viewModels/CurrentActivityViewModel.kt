@@ -15,9 +15,6 @@ class CurrentActivityViewModel(
 
     fun availableActivities() = timeTrackerRepository.availableActivities()
 
-    val previousActivities: LiveData<List<ActivityInstance>> =
-        timeTrackerRepository.allPreviousActivities()
-
     val currentActivity: LiveData<ActivityInstance> = timeTrackerRepository.currentActivity()
 
     private val mutableTick = MutableLiveData(0)

@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.room.Room
 import com.forsvarir.timetracker.R
 import com.forsvarir.timetracker.data.*
+import com.forsvarir.timetracker.viewModels.ActivityHistoryViewModel
 import com.forsvarir.timetracker.viewModels.CurrentActivityViewModel
 import com.forsvarir.timetracker.viewModels.LocalTimeFactory
 import com.forsvarir.timetracker.viewModels.TimeFactory
@@ -49,7 +50,7 @@ val applicationModule = module {
     }
     single { DataAccessScope() }
     single<TimeFactory> { LocalTimeFactory() }
-    factory<TimeTrackerRepository> {
+    single<TimeTrackerRepository> {
         TimeTrackerRepositoryImpl(
             database = get(),
             dataAccessScope = get(),
@@ -63,5 +64,8 @@ val applicationModule = module {
             clock = get(),
             idleActivityName = get<Context>().getString(R.string.ActivityIdle)
         )
+    }
+    viewModel {
+        ActivityHistoryViewModel(timeTrackerRepository = get())
     }
 }
